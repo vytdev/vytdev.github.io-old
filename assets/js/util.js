@@ -637,15 +637,15 @@ _window.ready(function(readyEvent) {
       tocEl = $(".toc"),
       docBody = $(".main"),
       backtotop = $(".backtotop"),
-      blockEl = $(".block");
+      mainEl = $(".main");
   
   backtotop.click(function(e) {
     e.preventDefault();
-    blockEl.scrollTop(0);
+    mainEl.scrollTop(0);
   });
   
-  blockEl.scroll(function() {
-    var scrollTop = blockEl.scrollTop();
+  mainEl.scroll(function() {
+    var scrollTop = mainEl.scrollTop();
     
     // back to top button
     if (scrollTop > 20) backtotop.css("display", "flex");
