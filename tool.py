@@ -1273,12 +1273,12 @@ if args.deploy:
   pipe = subprocess.Popen(["git", "rev-parse", "--short", "head"], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
   sha1 = pipe.communicate()[0].decode()
   pipe.kill()
-  msg = "Deployed commit %s" % (sha1)
+  msg = "deploy: %s" % (sha1)
   
   print("Deploying to GitHub Pages...")
   
   try:
-    ghp_import(dest, mesg=msg, push=True, use_shell=True, branch="site")
+    ghp_import(dest, mesg=msg, push=True, branch="site")
   except:
     print("Deployment failed.")
 
