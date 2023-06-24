@@ -1,0 +1,29 @@
+# Simple requirements file for installing dependencies
+# From the root folder, run:
+# 
+#    python -m pip install -r requirements.txt
+# 
+# ... to install needed dependencies.
+
+
+# We need this module as it is responsible on the main process for converting
+# markdown files to HTML.
+markdown>=3.4.1
+
+# Module needed for highlighting code blocks
+Pygments>=2.14.0
+
+# This is used when saving the output HTML after converting it using the above
+# module. It is used to save HTML files with required metadata and headers, and
+# preset layouts.
+Jinja2==3.1.2
+
+# It is used for watch mode, builds automatically the site as you make any
+# changes on it.
+watchdog==2.3.1
+
+# Module used when deploying to GitHub Pages
+ghp-import==2.1.0
+
+
+

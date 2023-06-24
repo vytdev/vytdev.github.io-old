@@ -1,0 +1,11 @@
+{% extends "base.tmpl" %}
+
+{% block content %}
+<h1>{{ doc.title|safe }}</h1>
+<p>{{ doc.about|safe }}</p>
+<p class="text-right"><em>Written by {{ doc.author|safe }}
+<br />
+Last updated {{ doc.updated|safe }}</em></p>
+<hr />
+{{ doc.content }}
+{% endblock %}

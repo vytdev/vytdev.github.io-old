@@ -1,0 +1,38 @@
+name: Page Content
+description: File a report on content in pages
+title: "[Content Issue]: "
+labels: ["content issue"]
+
+body:
+- type: markdown
+  attributes:
+    value: |
+      Thanks for your concern!
+- type: input
+  id: docurl
+  attributes:
+    label: Document Location
+    description: "Location of the document (don't change if pre-filled)"
+  validations:
+    required: true
+- type: dropdown
+  attributes:
+    label: What is it?
+    description: Tell us what content issue did you found.
+    options:
+    - Inappropriate content
+    - Typographical error
+    - Other
+  validations:
+    required: true
+- type: textarea
+  attributes:
+    label: Description
+    description: A brief explanation about the issue.
+    placeholder: Some explanation...
+  validations:
+    required: true
+- type: markdown
+  attributes:
+    value: |
+      Thanks for taking time to fill-up this form.
