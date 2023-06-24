@@ -1207,22 +1207,22 @@ body {
   border-radius: 0 10px 10px 0;
 }
 
-.block {
+.main {
   max-height: 100vh;
   overflow: hidden;
   overflow-y: auto;
   scroll-behavior: smooth;
 }
 
-.main {
-  display: flex;
-  flex-direction: column;
+.body > :nth-child(2) {
+  min-height: calc(100vh - 40px);
 }
 
 .nav {
   top: 0;
   height: 40px;
   background-color: #fff;
+  box-shadow: 0 1px 1px 0 rgba(0,0,0,.15);
   width: 100%;
   padding: 3px;
   z-index: 9;
@@ -1270,10 +1270,6 @@ form.search > input[type=submit] {
   flex: 1;
 }
 
-.body > :nth-child(2) {
-  min-height: calc(100vh - 80px);
-}
-
 .content {
   padding-bottom: 40px;
 }
@@ -1282,14 +1278,18 @@ form.search > input[type=submit] {
   overflow: hidden;
   overflow-y: auto;
   display: block;
-  max-height: 100vh;
-  left: -320px;
+  background-color: #fff;
+  max-height: calc(100vh - 40px);
+  height: 100%;
+  left: -330px;
   width: 100%;
-  max-width: 280px;
+  max-width: 320px;
+  box-shadow: 1px 0 1px 0 rgba(0,0,0,.25);
   position: fixed;
   padding: 8px;
   padding-bottom: 48px;
   z-index: 8;
+  top: 40px;
 }
 
 .footer {
@@ -1298,6 +1298,7 @@ form.search > input[type=submit] {
   background-color: #ddd;
   bottom: 0;
   color: #666;
+  z-index: 9;
 }
 
 .footer :not(h1,h2,h3,h4,h5,h6) {
@@ -1326,9 +1327,9 @@ form.search > input[type=submit] {
     width: 30%;
     max-width: none;
     padding-top: 8px;
+    box-shadow: none;
     position: sticky;
     left: 0;
-    top: 0;
   }
 }
 
@@ -1385,21 +1386,21 @@ li.taskitem > p:nth-child(2) {
 }
 
 .backtotop {
-  position: sticky;
+  position: sticky !important;
   display: none;
   z-index: 8;
   width: 30px;
   height: 30px;
   margin: 8px;
   margin-left: auto;
-  bottom: 0;
+  bottom: 8px;
   cursor: pointer;
   border-radius: 50%;
   background-color: #29d4ff;
 }
 
 .backtotop > svg {
-  fill: #888;
+  fill: #fff;
   margin: auto;
   width: 20px;
 }

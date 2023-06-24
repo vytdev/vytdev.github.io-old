@@ -192,15 +192,28 @@ class SnippetsBlockProcessor(MarkdownBlockProcessor):
     super().__init__(*args)
     self.md = kwargs.get("md")
     
-    # a regex for matching URLs, we need it other than using the urllib package
-    URL = r"^(?P<scheme>[+a-zA-Z]+:)?//(?P<hostname>[^<>/:]+)?(\:(?P<port>\d+))?(?P<path>/[^\#?;:]*)?(;(?P<param>[^\#?:]+))?(?P<query>\?[^\#:]+)?(?P<frag>\#[^:]+)?$"
-    self.URL = re.compile(URL)
     # match an external snippet block, e.g.
     #   [@file.txt]
     # you can also specify line ranges:
     #   [@file.txt:5:10]  # matches file.txt and extract line 5 to line 10
     # file paths can be a URL, relative path or absolute path offsets on site folder
-    self.RE = re.compile(r"^\[@(?P<loc>%s|[^<>\:]+)\:?(?P<start>[+-]?\d+)?\:?(?P<end>[+-]?\d+)?\]\s*?$" % (URL[1:-1]))
+    self.RE = re.compile(
+      r"^\[@" # beginning '[@'
+      r"(?P<loc>" # location of the snippet file, can be a relative path or a url
+      # match URL
+      r"(?P<scheme>[+a-zA-Z]+:)?//" # scheme 'http:', 'ftp:', etc.
+      r"(?P<hostname>[^<>/:]+)?" # hostname 'www.example.com'
+      r"(\:(?P<port>\d+))?" # port of the URI '443', '8080', etc.
+      r"(?P<path>/[^\#?;:]*)?" # file path 'filaneme.txt', '/foldername/filename.txt'
+      r"(;(?P<param>[^\#?:]+))?" # url parameters ';text'
+      r"(?P<query>\?[^\#:]+)?" # query parameters '?key=val&key2=val2'
+      r"(?P<frag>\#[^:]+)?" # fragment '#id', '#loc'
+      # end URL
+      r"|[^<>\:]+)" # the file is within the workspace
+      r"\:?(?P<start>[+-]?\d+)?" # start line ':1'
+      r"\:?(?P<end>[+-]?\d+)?" # end line '::-1'
+      r"\]$" # end ']'
+    )
   
   def test(self, parent, block):
     return bool(self.RE.match(block))
@@ -227,19 +240,25 @@ class SnippetsBlockProcessor(MarkdownBlockProcessor):
     except FileNotFoundError:
       # file doesn't exists, try on internet
       try:
-        # extract the URL and build required parts to resolve by the server
-        uri = self.URL.match(match.group("loc"))
-        loc = uri.group("path") or ""
-        if uri.group("param") is not None:
-          loc += ";" + uri.group("param")
-        if uri.group("query") is not None:
-          loc += uri.group("query")
-        if uri.group("frag") is not None:
-          loc += uri.group("frag")
+        loc = match.group("path") or ""
+        if match.group("param") is not None:
+          loc += ";" + match.group("param")
+        if match.group("query") is not None:
+          loc += match.group("query")
+        if match.group("frag") is not None:
+          loc += match.group("frag")
         # connect to server and request the file
-        conn = http.client.HTTPSConnection(uri.group("hostname"))
-        conn.request("GET", loc)
-        response = conn.getresponse()
+        conn = http.client.HTTPSConnection(match.group("hostname"))
+        # handle redirects
+        while True:
+          conn.request("GET", loc)
+          response = conn.getresponse()
+          if loc := response.getheader("location"):
+            # reset the connection to server
+            conn.close()
+            conn.connect()
+            continue
+          break
         # error was occured, raise so it will print the warning message
         if response.status >= 400:
           raise
@@ -253,9 +272,9 @@ class SnippetsBlockProcessor(MarkdownBlockProcessor):
         except:
           lexer = get_lexer_by_name("text")
         # decode the file and extract lines
-        srclines = response.read().decode(encoding=content_type["charset"] if "charset" in content_type else "utf-8").split("\n")
+        srclines = response.read().decode(encoding=content_type.get("charset", "utf-8")).split("\n")
         # get the filename
-        filename = os.path.split(uri.group("path"))[1]
+        filename = os.path.split(match.group("path"))[1]
         # close the connection to server
         conn.close()
       except:
@@ -739,13 +758,11 @@ def build_page(path, dx=None, tc=None, root=src, out=dest):
     author = match.group(1)
     contact = match.group(3)
   
-  category = str(fileloc.parents[-1])
   context = {
     "title": md.Meta["title"][0] if "title" in md.Meta else "Untitled",
     "about": md.Meta["about"][0][0:160] if "about" in md.Meta else "No description.",
     "previous": md.Meta["previous"][0] + ".html" if "previous" in md.Meta else "",
     "next": md.Meta["next"][0] + ".html" if "next" in md.Meta else "",
-    "category": category.capitalize() if len(category) != 0 and category != "." else None,
     "author": author,
     "contact": contact,
     "contributors": contributors,
@@ -764,7 +781,7 @@ def build_page(path, dx=None, tc=None, root=src, out=dest):
   context["content"] = docbody
   context["indexCache"] = json.dumps({
     "@context": "https://schema.org",
-    "@type":  "WebSite",
+    "@type":  "WebSite" if context["home"] and len(fileloc.parents) == 1 else "WebPage",
     "description": context["about"],
     "headline": context["title"],
     "name": context["title"],
@@ -792,7 +809,6 @@ def build_page(path, dx=None, tc=None, root=src, out=dest):
       context["title"],
       context["about"],
       context["author"],
-      context["category"] or "",
       context["created"],
       context["updated"],
       *(contributor["name"] for contributor in contributors),
