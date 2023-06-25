@@ -299,7 +299,7 @@ class SnippetsBlockProcessor(MarkdownBlockProcessor):
     
     # print snippet
     snippet = "\n".join(srclines[start:end])
-    formatter = HtmlFormatter(cssclass="snippet", linenos=True, linenostart=start + 1)
+    formatter = HtmlFormatter(cssclass="snippet", wrapcode=True, linenos=True, linenostart=start + 1)
     result = highlight(snippet, lexer, formatter)
     
     # put the snippet to tree
