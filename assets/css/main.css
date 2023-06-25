@@ -23,6 +23,10 @@ body {
   color: #444;
 }
 
+::-webkit-scrollbar {
+  display: none;
+}
+
 /* responsive support */
 
 .container-fluid {
@@ -1316,7 +1320,8 @@ form.search > input[type=submit] {
   }
   
   .content {
-    max-width: 70%;
+    max-width: 65%;
+    margin-left: 5%;
   }
   
   .body {
@@ -1334,10 +1339,6 @@ form.search > input[type=submit] {
 }
 
 /* content */
-
-.hide {
-  display: none;
-}
 
 .text-left {
   text-align: left;

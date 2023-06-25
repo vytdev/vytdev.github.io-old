@@ -57,6 +57,10 @@ div.admonition.caution {
   color: #aaa !important;
 }
 
+.monochromatic {
+  filter: invert(1);
+}
+
 :not(.nohighlight) span.highlight:not(.nohighlight), mark {
   color: #444;
 }
