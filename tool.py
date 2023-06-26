@@ -380,7 +380,7 @@ sitemapTmpl = env.get_template("sitemap.tmpl")
 indexTmplName = "template.tmpl"
 
 # Load records of docs
-recordsLoc = ".records.json"
+recordsLoc = "_records.json"
 
 if os.path.exists(recordsLoc):
   with open(recordsLoc, "r", encoding="utf-8") as f:
@@ -690,7 +690,7 @@ mdmetare = re.compile( # regex for removing metadata in markdown files
     r"(\n[ ]{4,}.*)*?)*" # more
     r"\n(\n|(-{3}|\.{3})(\s.*)?)" # end
   , flags=re.M)
-contributorre = re.compile("^([^\<]+)(\s+?\<([^\>]+)\>)?$")
+contributorre = re.compile(r"^([^\<]+)(\s+?\<([^\>]+)\>)?$")
 separators = re.compile("[,\\s]+")
 
 # instantiate stemmer
@@ -747,24 +747,14 @@ def build_page(path, dx=None, tc=None, root=src, out=dest):
       match = contributorre.match(person)
       contributors.append({
         "name": match.group(1),
-        "url": match.group(3) or None
+        "url": match.group(3)
       })
-  
-  # process author
-  author = "anonymous"
-  contact = None
-  if "author" in md.Meta:
-    match = contributorre.match(md.Meta["author"][0])
-    author = match.group(1)
-    contact = match.group(3)
   
   context = {
     "title": md.Meta["title"][0] if "title" in md.Meta else "Untitled",
     "about": md.Meta["about"][0][0:160] if "about" in md.Meta else "No description.",
     "previous": md.Meta["previous"][0] + ".html" if "previous" in md.Meta else "",
     "next": md.Meta["next"][0] + ".html" if "next" in md.Meta else "",
-    "author": author,
-    "contact": contact,
     "contributors": contributors,
     "keywords": keywords,
     "home": fileloc.stem == "index",
@@ -781,7 +771,7 @@ def build_page(path, dx=None, tc=None, root=src, out=dest):
   context["content"] = docbody
   context["indexCache"] = json.dumps({
     "@context": "https://schema.org",
-    "@type":  "WebSite" if context["home"] and len(fileloc.parents) == 1 else "WebPage",
+    "@type":  "WebSite" if context["home"] and len(fileloc.parents) == 2 else "WebPage",
     "description": context["about"],
     "headline": context["title"],
     "name": context["title"],
@@ -808,7 +798,6 @@ def build_page(path, dx=None, tc=None, root=src, out=dest):
     rawmd += "\n" + " ".join([
       context["title"],
       context["about"],
-      context["author"],
       context["created"],
       context["updated"],
       *(contributor["name"] for contributor in contributors),

@@ -64,6 +64,7 @@
           <a class="hide-xs show-md" href="{{ 'help/index.html'|url }}">Help</a>
         </div>
         <div class="container grid">
+          {% block outersidebar %}
           <div class="sidebar col-lg-7">
             <div>
               {% block sidebar %}
@@ -72,6 +73,7 @@
               {% endblock %}
             </div>
           </div>
+          {% endblock %}
           <div class="content col">
             {% block content %}
 <h1>{{ doc.title|safe }}</h1>
@@ -92,9 +94,10 @@
             <p><em>Simple documentations that everyone can contribute.</em></p>
           </div>
           <div class="col">
+            {%- block metadata %}
             <h3>{{ doc.title|safe }}</h3>
             <p>{{ doc.about|safe }}</p>
-            <p><em>Written by {% if doc.contact %}<a href="{{ doc.contact }}">{% endif %}{{ doc.author|safe }}{% if doc.contact %}</a>{% endif %}{% if doc.contributors|length %}, with other contributors:{% endif %}</em></p>
+            <p><em>Written by {% if doc.contributors|length %}our contributors:{% else %}anonymous.{% endif %}</em></p>
             {% if doc.contributors|length -%}
             <ul class="list-box">
             {%- for person in doc.contributors %}
@@ -102,6 +105,7 @@
             {%- endfor %}
             </ul>
             {%- endif %}
+            {%- endblock -%}
             <form class="search" method="GET" action="{{ 'search.html'|url }}">
               <input placeholder="Quick search..." type="search" name="q" />
               <input type="submit" value="" id="search-submit-btn" />

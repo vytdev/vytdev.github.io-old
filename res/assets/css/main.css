@@ -1275,6 +1275,7 @@ form.search > input[type=submit] {
 }
 
 .content {
+  padding-top: 10px;
   padding-bottom: 40px;
 }
 
@@ -1524,6 +1525,12 @@ div.admonition.warning {
 div.admonition.caution {
   background-color: #ffd29b;
   border-left-color: #f78700;
+}
+
+noscript {
+  display: block;
+  margin-top: 10px;
+  margin-bottom: 10px;
 }
 
 h1 {

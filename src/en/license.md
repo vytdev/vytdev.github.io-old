@@ -2,7 +2,7 @@
 title: License
 about: See the legal notes
 keywords: license, website
-author: the owner
+contributors: the owner <https://github.com/vytdev>
 updated: 17-06-2023
 ---
 

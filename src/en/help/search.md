@@ -1,7 +1,7 @@
 ---
 title: Search engine
 about: A documentation about the docs search algorithm
-author: VYT <https://github.com/vytdev>
+contributors: VYT <https://github.com/vytdev>
 keywords: search, docs
 ---
 
