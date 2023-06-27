@@ -1220,6 +1220,8 @@ body {
 
 .body > :nth-child(2) {
   min-height: calc(100vh - 40px);
+  padding-left: 10px;
+  padding-right: 10px;
 }
 
 .nav {
@@ -1292,7 +1294,6 @@ form.search > input[type=submit] {
   box-shadow: 1px 0 1px 0 rgba(0,0,0,.25);
   position: fixed;
   padding: 8px;
-  padding-bottom: 48px;
   z-index: 8;
   top: 40px;
 }
@@ -1388,14 +1389,15 @@ li.taskitem > p:nth-child(2) {
 }
 
 .backtotop {
-  position: sticky !important;
-  display: none;
+  position: fixed !important;
+  display: flex;
   z-index: 8;
-  width: 30px;
-  height: 30px;
+  width: 40px;
+  height: 40px;
   margin: 8px;
-  margin-left: auto;
-  bottom: 8px;
+  bottom: 4px;
+  right: -60px;
+  transition: right ease 200ms;
   cursor: pointer;
   border-radius: 50%;
   background-color: #29d4ff;
@@ -1405,6 +1407,36 @@ li.taskitem > p:nth-child(2) {
   fill: #fff;
   margin: auto;
   width: 20px;
+}
+
+@keyframes toast-animation {
+  from, to {
+    left: -100%;
+  }
+  10%, 90% {
+    left: 0;
+  }
+}
+
+.toast {
+  display: block;
+  left: -100%;
+  bottom: 0;
+  position: fixed;
+  min-height: 40px;
+  max-height: 50%;
+  overflow-y: auto;
+  width: 75%;
+  margin: 2px;
+  z-index: 10;
+  background-color: #fff;
+  border-color: 1px solid #888;
+  border-radius: 3px;
+  padding: 4px;
+}
+
+.toast.active {
+  animation: toast-animation 5s ease 1;
 }
 
 .snippet {

@@ -17,10 +17,9 @@ licensed under the said license.
 
 !!! attention
     
-    This logo have no trademark neither copyright notices, but is licensed as part of
-    this documentation project under the MIT License. I was based it in a Minecraft chest
-    (consider [Minecraft](https://minecraft.net)) where the chest is an archive of
-    information and documentations for my projects.
+    This logo have no trademark, but is licensed as part of this documentation project
+    under the MIT License. I was based it in a Minecraft chest (consider [Minecraft](https://minecraft.net))
+    where the chest is an archive of information and documentations for my projects.
 
 ## Open Source licenses
 
