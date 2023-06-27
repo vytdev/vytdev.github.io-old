@@ -106,7 +106,7 @@ class HTMLEntitiesInlineProcessor(MarkdownInlineProcessor):
       r"\u20A0-\u20CF" # currency symbols
       r"\u2190-\u21FF" # arrows
       r"\u2600-\u26FF" # misc symbols
-      r"])" % ("|".join(list(self.replacements.keys())))
+      r"])" % ("|".join(self.replacements.keys()))
     )
     super().__init__(regex, re.UNICODE, *args, **kwargs)
   
@@ -1401,6 +1401,8 @@ if args.pack:
   # iterate over all files
   for root, dirs, files in os.walk(dest):
     relroot = pathlib.Path(root).relative_to(dest)
+    # exclude .github
+    if relroot.is_relative_to(".github"): continue
     for file in files:
       # process needed paths
       srcfile = os.path.join(root, file)
