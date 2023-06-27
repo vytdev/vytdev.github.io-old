@@ -93,6 +93,161 @@ class IconInlineProcessor(MarkdownInlineProcessor):
     txt = gemoji[icon] if icon in gemoji else m.group(0)
     return txt, m.start(0), m.end(0)
 
+# substitute html reserved characters and escape others
+class HTMLEntitiesInlineProcessor(MarkdownInlineProcessor):
+  def __init__(self, subs, *args, **kwargs):
+    self.replacements = subs
+    self.replacements.update(self.DEFAULTS)
+    
+    regex = (
+      r"(%s|["
+      r"\u2200-\u22FF" # math symbols
+      r"\u0370-\u03FF" # greek letters
+      r"\u20A0-\u20CF" # currency symbols
+      r"\u2190-\u21FF" # arrows
+      r"\u2600-\u26FF" # misc symbols
+      r"])" % ("|".join(list(self.replacements.keys())))
+    )
+    super().__init__(regex, re.UNICODE, *args, **kwargs)
+  
+  DEFAULTS = {
+    # Common charcaters, see: https://www.w3schools.com/html/html_entities.asp
+    "<": "lt", # LESS THAN
+    ">": "gt", # GREATER THAN
+    "&": "amp", # AMPERSAND
+    "\"": "quot", # DOUBLE QUOTATION MARKS
+    "'": "apos", # APOSTROPHE
+    "©": "copy", # COPYRIGHT
+    "®": "reg", # REGISTERED TRADEMARK
+    "™": "trade", # TRADEMARK
+    # Math characters, see: https://www.w3schools.com/charsets/ref_utf_math.asp
+    "\u2200": "forall", # FOR ALL
+    "\u2202": "part", # PARTIAL DIFFERENTIAL
+    "\u2203": "exist", # THERE EXISTS
+    "\u2205": "empty", # EMPTY SET
+    "\u2207": "nabla", # NABLA
+    "\u2208": "isin", # ELEMENT OF
+    "\u2209": "notin", # NOT AN ELEMENT OF
+    "\u220B": "ni", # CONTAINS AS MEMBER
+    "\u220F": "prod", # N-ARY PRODUCT
+    "\u2211": "sum", # N-ARY SUMMATION
+    "\u2212": "minus", # MINUS SIGN
+    "\u2217": "lowast", # ASTERISK OPERATOR
+    "\u221A": "radic", # SQUARE ROOT
+    "\u221D": "prop", # PROPORTIONAL TO
+    "\u221E": "infin", # INFINITY
+    "\u2220": "ang", # ANGLE
+    "\u2227": "and", # LOGICAL AND
+    "\u2228": "or", # LOGICAL OR
+    "\u2229": "cap", # INTERSECTION
+    "\u222A": "cup", # UNION
+    "\u222B": "int", # INTEGRAL
+    "\u2234": "there4", # THEREFORE
+    "\u223C": "sim", # TILDE OPERATOR
+    "\u2245": "cong", # APPROXIMATELY EQUAL TO
+    "\u2248": "asymp", # ALMOST EQUAL TO
+    "\u2260": "ne", # NOT EQUAL TO
+    "\u2261": "equiv", # IDENTICAL TO
+    "\u2264": "le", # LESS-THAN OR EQUAL TO
+    "\u2265": "ge", # GREATER-THAN OR EQUAL TO
+    "\u2282": "sub", # SUBSET OF
+    "\u2283": "sup", # SUPERSET OF
+    "\u2284": "nsub", # NOT A SUBSET OF
+    "\u2286": "sube", # SUBSET OF OR EQUAL TO
+    "\u2287": "supe", # SUPERSET OF OR EQUAL TO
+    "\u2295": "oplus", # CIRCLED PLUS
+    "\u2297": "otimes", # CIRCLED TIMES
+    "\u22A5": "perp", # UP TACK
+    "\u22C5": "sdot", # DOT OPERATOR
+    # Greek characters, see: https://www.w3schools.com/charsets/ref_utf_greek.asp
+    "\u0391": "Alpha", # GREEK CAPITAL LETTER ALPHA
+    "\u0392": "Beta", # GREEK CAPITAL LETTER BETA
+    "\u0393": "Gamma", # GREEK CAPITAL LETTER GAMMA
+    "\u0394": "Delta", # GREEK CAPITAL LETTER DELTA
+    "\u0395": "Epsilon", # GREEK CAPITAL LETTER EPSILON
+    "\u0396": "Zeta", # GREEK CAPITAL LETTER ZETA
+    "\u0397": "Eta", # GREEK CAPITAL LETTER ETA
+    "\u0398": "Theta", # GREEK CAPITAL LETTER THETA
+    "\u0399": "Iota", # GREEK CAPITAL LETTER IOTA
+    "\u039A": "Kappa", # GREEK CAPITAL LETTER KAPPA
+    "\u039B": "Lambda", # GREEK CAPITAL LETTER LAMBDA
+    "\u039C": "Mu", # GREEK CAPITAL LETTER MU
+    "\u039D": "Nu", # GREEK CAPITAL LETTER NU
+    "\u039E": "Xi", # GREEK CAPITAL LETTER XI
+    "\u039F": "Omicron", # GREEK CAPITAL LETTER OMICRON
+    "\u03A0": "Pi", # GREEK CAPITAL LETTER PI
+    "\u03A1": "Rho", # GREEK CAPITAL LETTER RHO
+    "\u03A3": "Sigma", # GREEK CAPITAL LETTER SIGMA
+    "\u03A4": "Tau", # GREEK CAPITAL LETTER TAU
+    "\u03A5": "Upsilon", # GREEK CAPITAL LETTER UPSILON
+    "\u03A6": "Phi", # GREEK CAPITAL LETTER PHI
+    "\u03A7": "Chi", # GREEK CAPITAL LETTER CHI
+    "\u03A8": "Psi", # GREEK CAPITAL LETTER PSI
+    "\u03A9": "Omega", # GREEK CAPITAL LETTER OMEGA
+    "\u03B1": "alpha", # GREEK SMALL LETTER ALPHA
+    "\u03B2": "beta", # GREEK SMALL LETTER BETA
+    "\u03B3": "gamma", # GREEK SMALL LETTER GAMMA
+    "\u03B4": "delta", # GREEK SMALL LETTER DELTA
+    "\u03B5": "epsilon", # GREEK SMALL LETTER EPSILON
+    "\u03B6": "zeta", # GREEK SMALL LETTER ZETA
+    "\u03B7": "eta", # GREEK SMALL LETTER ETA
+    "\u03B8": "theta", # GREEK SMALL LETTER THETA
+    "\u03B9": "iota", # GREEK SMALL LETTER IOTA
+    "\u03BA": "kappa", # GREEK SMALL LETTER KAPPA
+    "\u03BB": "lambda", # GREEK SMALL LETTER LAMBDA
+    "\u03BC": "mu", # GREEK SMALL LETTER MU
+    "\u03BD": "nu", # GREEK SMALL LETTER NU
+    "\u03BE": "xi", # GREEK SMALL LETTER XI
+    "\u03BF": "omicron", # GREEK SMALL LETTER OMICRON
+    "\u03C0": "pi", # GREEK SMALL LETTER PI
+    "\u03C1": "rho", # GREEK SMALL LETTER RHO
+    "\u03C2": "sigmaf", # GREEK SMALL LETTER FINAL SIGMA
+    "\u03C3": "sigma", # GREEK SMALL LETTER SIGMA
+    "\u03C4": "tau", # GREEK SMALL LETTER TAU
+    "\u03C5": "upsilon", # GREEK SMALL LETTER UPSILON
+    "\u03C6": "phi", # GREEK SMALL LETTER PHI
+    "\u03C7": "chi", # GREEK SMALL LETTER CHI
+    "\u03C8": "psi", # GREEK SMALL LETTER PSI
+    "\u03C9": "omega", # GREEK SMALL LETTER OMEGA
+    "\u03D1": "thetasym", # GREEK THETA SYMBOL
+    "\u03D2": "upsih", # GREEK UPSILON WITH HOOK SYMBOL
+    "\u03D5": "straightphi", # GREEK PHI SYMBOL
+    "\u03D6": "piv", # GREEK PI SYMBOL
+    "\u03DC": "Gammad", # GREEK LETTER DIGAMMA
+    "\u03DD": "gammad", # GREEK SMALL LETTER DIGAMMA
+    "\u03F0": "varkappa", # GREEK KAPPA SYMBOL
+    "\u03F1": "varrho", # GREEK RHO SYMBOL
+    "\u03F5": "straightepsilon", # GREEK LUNATE EPSILON SYMBOL
+    "\u03F6": "backepsilon", # GREEK REVERSED LUNATE EPSILON SYMBOL
+    # Currency symbols, see: https://www.w3schools.com/charsets/ref_utf_currency.asp
+    "\u00A2": "cent", # CENT
+    "\u00A3": "pound", # POUND
+    "\u00A5": "yen", # YEN
+    "\u20AC": "euro", # EURO
+    # Arrows, see: https://www.w3schools.com/charsets/ref_utf_arrows.asp
+    "\u2190": "larr", # LEFTWARDS ARROW
+    "\u2191": "uarr", # UPWARDS ARROW
+    "\u2192": "rarr", # RIGHTWARDS ARROW
+    "\u2193": "darr", # DOWNWARDS ARROW
+    "\u2194": "harr", # LEFT RIGHT ARROW
+    "\u21B5": "crarr", # DOWNWARDS ARROW WITH CORNER LEFTWARDS
+    "\u21D0": "lArr", # LEFTWARDS DOUBLE ARROW
+    "\u21D1": "uArr", # UPWARDS DOUBLE ARROW
+    "\u21D2": "rArr", # RIGHTWARDS DOUBLE ARROW
+    "\u21D3": "dArr", # DOWNWARDS DOUBLE ARROW
+    "\u21D4": "hArr", # LEFT RIGHT DOUBLE ARROW
+    # Miscellaneous symbols, see: https://www.w3schools.com/charsets/ref_utf_symbols.asp
+    "\u2660": "spades", # BLACK SPADE SUIT
+    "\u2663": "clubs", # BLACK CLUB SUIT
+    "\u2665": "hearts", # BLACK HEART SUIT
+    "\u2666": "diams", # BLACK DIAMOND SUIT
+  }
+  
+  def handleMatch(self, m, data):
+    char = m.group(1)
+    sub = "&%s;" % (self.replacements.get(char, "#" + str(ord(char))))
+    return sub, m.start(0), m.end(0)
+
 # inline element processor
 class InlineElementProcessor(MarkdownInlineProcessor):
   def __init__(self, element, idx, *args, **kwargs):
@@ -334,6 +489,7 @@ class CustomExtension(MarkdownBaseExtension):
     md.inlinePatterns.register(InlineElementProcessor("sup", 2, r"(\^)(?!\^)(.+?)(?<!\^)\1"), "sup", 40)
     md.inlinePatterns.register(InlineElementProcessor("mark", 2, r"(==)(?!==)(.+?)(?<!==)\1"), "mark", 30)
     md.inlinePatterns.register(TildeInlineProcessor(r"~"), "tilde", 40)
+    md.inlinePatterns.register(HTMLEntitiesInlineProcessor({}), "entities", 95)
     # block processors
     md.parser.blockprocessors.register(TaskListBlockProcessor(md.parser), "tasklist", 100)
     md.parser.blockprocessors.register(SnippetsBlockProcessor(md.parser, md=md), "snippets", 110)
