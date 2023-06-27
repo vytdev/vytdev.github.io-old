@@ -85,6 +85,9 @@ with open("emoji.json", "r", encoding="utf-8") as f:
 
 # emoticons processor
 class IconInlineProcessor(MarkdownInlineProcessor):
+  def __init__(self, *args, **kwargs):
+    super().__init__(r":(\w+):", *args, **kwargs)
+  
   def handleMatch(self, m, data):
     icon = m.group(1).lower()
     txt = gemoji[icon] if icon in gemoji else m.group(0)
@@ -192,28 +195,27 @@ class SnippetsBlockProcessor(MarkdownBlockProcessor):
     super().__init__(*args)
     self.md = kwargs.get("md")
     
-    # match an external snippet block, e.g.
-    #   [@file.txt]
-    # you can also specify line ranges:
-    #   [@file.txt:5:10]  # matches file.txt and extract line 5 to line 10
-    # file paths can be a URL, relative path or absolute path offsets on site folder
-    self.RE = re.compile(
-      r"^\[@" # beginning '[@'
-      r"(?P<loc>" # location of the snippet file, can be a relative path or a url
-      # match URL
-      r"(?P<scheme>[+a-zA-Z]+:)?//" # scheme 'http:', 'ftp:', etc.
-      r"(?P<hostname>[^<>/:]+)?" # hostname 'www.example.com'
-      r"(\:(?P<port>\d+))?" # port of the URI '443', '8080', etc.
-      r"(?P<path>/[^\#?;:]*)?" # file path 'filaneme.txt', '/foldername/filename.txt'
-      r"(;(?P<param>[^\#?:]+))?" # url parameters ';text'
-      r"(?P<query>\?[^\#:]+)?" # query parameters '?key=val&key2=val2'
-      r"(?P<frag>\#[^:]+)?" # fragment '#id', '#loc'
-      # end URL
-      r"|[^<>\:]+)" # the file is within the workspace
-      r"\:?(?P<start>[+-]?\d+)?" # start line ':1'
-      r"\:?(?P<end>[+-]?\d+)?" # end line '::-1'
-      r"\]$" # end ']'
-    )
+  # match an external snippet block, e.g.
+  #   [@file.txt]
+  # you can also specify line ranges:
+  #   [@file.txt:5:10]  # matches file.txt and extract line 5 to line 10
+  # file paths can be a URL, relative path or absolute path offsets on site folder
+  RE = re.compile(
+    r"^<@snippet>\s*\:\s*" # beginning '<@snippet>'
+    r"(?P<loc>" # location of the snippet file, can be a relative path or a url
+    # match URL
+    r"(?P<scheme>[+a-zA-Z]+:)?//" # scheme 'http:', 'ftp:', etc.
+    r"(?P<hostname>[^<>/:]+)?" # hostname 'www.example.com'
+    r"(\:(?P<port>\d+))?" # port of the URI '443', '8080', etc.
+    r"(?P<req>(?P<path>/[^\#?;:]*)?" # file path 'filaneme.txt', '/foldername/filename.txt'
+    r"(;(?P<param>[^\#?:]+))?" # url parameters ';text'
+    r"(?P<query>\?[^\#:]+)?" # query parameters '?key=val&key2=val2'
+    r"(?P<frag>\#[^:]+)?)" # fragment '#id', '#loc'
+    # end URL
+    r"|[^<>\:]+)\s*?" # the file is within the workspace
+    r"\:?(?P<start>[+-]?\d+)?" # start line ':1'
+    r"\:?(?P<end>[+-]?\d+)?$" # end line '::-1'
+  )
   
   def test(self, parent, block):
     return bool(self.RE.match(block))
@@ -240,13 +242,7 @@ class SnippetsBlockProcessor(MarkdownBlockProcessor):
     except FileNotFoundError:
       # file doesn't exists, try on internet
       try:
-        loc = match.group("path") or ""
-        if match.group("param") is not None:
-          loc += ";" + match.group("param")
-        if match.group("query") is not None:
-          loc += match.group("query")
-        if match.group("frag") is not None:
-          loc += match.group("frag")
+        loc = match.group("req")
         # connect to server and request the file
         conn = http.client.HTTPSConnection(match.group("hostname"))
         # handle redirects
@@ -334,7 +330,7 @@ class CustomExtension(MarkdownBaseExtension):
     # add to escaped chars
     md.ESCAPED_CHARS = [*md.ESCAPED_CHARS, "~", "=", "*"]
     # inline processors
-    md.inlinePatterns.register(IconInlineProcessor(r":(\w+):", md), "icons", 200)
+    md.inlinePatterns.register(IconInlineProcessor(md), "icons", 200)
     md.inlinePatterns.register(InlineElementProcessor("sup", 2, r"(\^)(?!\^)(.+?)(?<!\^)\1"), "sup", 40)
     md.inlinePatterns.register(InlineElementProcessor("mark", 2, r"(==)(?!==)(.+?)(?<!==)\1"), "mark", 30)
     md.inlinePatterns.register(TildeInlineProcessor(r"~"), "tilde", 40)

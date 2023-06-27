@@ -10,7 +10,7 @@ The VYT Documentation Service is licensed under the MIT License, this gives you 
 to use, copy, modify, merge, publish, distribute, sublicense, and sell copies of this
 documentation project.
 
-[@/license.txt]
+<@snippet>: /license.txt
 
 All documents, assets, and other contents of this project (the documentation itself) are
 licensed under the said license.
