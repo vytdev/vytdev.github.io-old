@@ -1275,7 +1275,7 @@ if args.deploy:
   # add last commit hash that had been deployed like MKDocs do so its easily
   # accessible
   import subprocess
-  pipe = subprocess.Popen(["git", "rev-parse", "--short", "head"], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+  pipe = subprocess.Popen(["git", "rev-parse", "head"], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
   sha1 = pipe.communicate()[0].decode()
   pipe.kill()
   msg = "deploy: %s" % (sha1)
