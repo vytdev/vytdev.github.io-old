@@ -12,6 +12,7 @@ import http.client
 import xml.etree.ElementTree as ET
 
 # Paths needed from the workspace
+usrdir = os.getcwd()
 os.chdir(os.path.dirname(__file__))
 
 src = "src"
@@ -40,17 +41,43 @@ parser.add_argument("--clean", "-c", action="store_true", help="Remove the last 
 parser.add_argument("--watch", "-w", action="store_true", help="Watch for any file changes on src and res folder while editing it.")
 parser.add_argument("--deploy", "-d", action="store_true", help="Deploy the built output to GitHub Pages.")
 parser.add_argument("--pack", "-p", action="store_true", help="Package the output into archives for release.")
+subparsers = parser.add_subparsers(dest="subcmd", help="sub-commands")
+parser_import = subparsers.add_parser("import", help="Import directory")
+parser_import.add_argument("folder", metavar="<folder>", help="Path where docs are from")
+parser_import.add_argument("dest", metavar="<dest>", help="Path where you want to place the docs in src folder")
 args = parser.parse_args()
 
 config = {
   "debug": args.debug
 }
 
+if args.subcmd == "import":
+  importpath = pathlib.Path(os.path.normpath(os.path.join(usrdir, args.folder)))
+  importdest = pathlib.Path(os.path.normpath(os.path.join("src", args.dest)))
+
+def import_docs(debug=False):
+  if args.subcmd == "import":
+    try:
+      shutil.copytree(importpath, importdest)
+      if debug: print("Imported successfully")
+    except:
+      if debug: print("Import failed")
+
+# Utility function for safely deleting directory or file
+def safe_delete(path):
+  if os.path.exists(path):
+    if os.path.isfile(path):
+      os.unlink(path)
+    else:
+      shutil.rmtree(path)
+    return True
+  return False
+
 # Performs cleanup if specified
 if args.clean:
   print("Cleaning workspace...")
-  if os.path.exists(dist): shutil.rmtree(dist)
-  if os.path.exists(dest): shutil.rmtree(dest)
+  safe_delete(dist)
+  safe_delete(dest)
   print("Workspace cleaned.")
 
 # Check important folders
@@ -93,7 +120,7 @@ class IconInlineProcessor(MarkdownInlineProcessor):
     txt = gemoji[icon] if icon in gemoji else m.group(0)
     return txt, m.start(0), m.end(0)
 
-# substitute html reserved characters and escape others
+# substitute html reserved characters and escape others (for utf-8 charset support)
 class HTMLEntitiesInlineProcessor(MarkdownInlineProcessor):
   def __init__(self, subs, *args, **kwargs):
     self.replacements = subs
@@ -112,14 +139,14 @@ class HTMLEntitiesInlineProcessor(MarkdownInlineProcessor):
   
   DEFAULTS = {
     # Common charcaters, see: https://www.w3schools.com/html/html_entities.asp
-    "<": "lt", # LESS THAN
-    ">": "gt", # GREATER THAN
-    "&": "amp", # AMPERSAND
-    "\"": "quot", # DOUBLE QUOTATION MARKS
-    "'": "apos", # APOSTROPHE
-    "©": "copy", # COPYRIGHT
-    "®": "reg", # REGISTERED TRADEMARK
-    "™": "trade", # TRADEMARK
+    "\u003C": "lt", # LESS THAN
+    "\u003E": "gt", # GREATER THAN
+    "\u0026": "amp", # AMPERSAND
+    "\u0022": "quot", # DOUBLE QUOTATION MARKS
+    "\u0027": "apos", # APOSTROPHE
+    "\u00A9": "copy", # COPYRIGHT
+    "\u00AE": "reg", # REGISTERED TRADEMARK
+    "\u2122": "trade", # TRADEMARK
     # Math characters, see: https://www.w3schools.com/charsets/ref_utf_math.asp
     "\u2200": "forall", # FOR ALL
     "\u2202": "part", # PARTIAL DIFFERENTIAL
@@ -351,12 +378,12 @@ class SnippetsBlockProcessor(MarkdownBlockProcessor):
     self.md = kwargs.get("md")
     
   # match an external snippet block, e.g.
-  #   [@file.txt]
+  #   <@snippet>: file.txt
   # you can also specify line ranges:
-  #   [@file.txt:5:10]  # matches file.txt and extract line 5 to line 10
+  #   <@snippet>: file.txt:5:10  # matches file.txt and extract line 5 to line 10
   # file paths can be a URL, relative path or absolute path offsets on site folder
   RE = re.compile(
-    r"^<@snippet>\s*\:\s*" # beginning '<@snippet>'
+    r"^<@snippet>\s*\:\s*" # beginning '<@snippet>:'
     r"(?P<loc>" # location of the snippet file, can be a relative path or a url
     # match URL
     r"(?P<scheme>[+a-zA-Z]+:)?//" # scheme 'http:', 'ftp:', etc.
@@ -483,7 +510,7 @@ class CustomExtension(MarkdownBaseExtension):
     self.md = md
     self.reset()
     # add to escaped chars
-    md.ESCAPED_CHARS = [*md.ESCAPED_CHARS, "~", "=", "*"]
+    md.ESCAPED_CHARS += ["~", "=", "*"]
     # inline processors
     md.inlinePatterns.register(IconInlineProcessor(md), "icons", 200)
     md.inlinePatterns.register(InlineElementProcessor("sup", 2, r"(\^)(?!\^)(.+?)(?<!\^)\1"), "sup", 40)
@@ -525,7 +552,8 @@ md = markdown.Markdown(extensions=[CustomExtension(), "extra", "admonition", "to
     "css_class": "snippet"
   }
 })
-env = jinja2.Environment(loader=jinja2.FileSystemLoader([res, src]), auto_reload=args.watch) # you can still edit template files while watching
+# you can still edit template files while in watch mode
+env = jinja2.Environment(loader=jinja2.FileSystemLoader([res, src]), auto_reload=args.watch)
 env.filters["url"] = url_filter
 baseTmpl = env.get_template("base.tmpl")
 sitemapTmpl = env.get_template("sitemap.tmpl")
@@ -1080,8 +1108,11 @@ def rebuild_src(debug=False):
 # Function to rebuild the site
 def update(debug=False, clean=False):
   # perform clean-up
-  if clean and os.path.exists(dest): shutil.rmtree(dest)
+  if clean: safe_delete(dest)
   if not os.path.exists(dest): os.makedirs(dest)
+  
+  # import docs
+  import_docs()
   
   # copy resource files
   copy_res(debug)
@@ -1092,8 +1123,13 @@ def update(debug=False, clean=False):
 if args.debug:
   print("Building docs in debug mode.")
 
+if args.subcmd == "import":
+  print("Importing docs from '%s' to '%s'..." % (importpath, importdest))
+  safe_delete(importdest)
+  import_docs(debug=True)
+
 # Override to rebuild the site or automatically rebuild the site if no one arguments were passed
-if args.build or (not args.serve and not args.clean and not args.watch and not args.deploy and not args.pack):
+if args.build or (not args.subcmd and not args.serve and not args.clean and not args.watch and not args.deploy and not args.pack):
   print("Generating docs...")
   start = time.monotonic()
   update(debug=True)
@@ -1111,12 +1147,11 @@ if args.watch:
   # collection of watchers
   watchers = []
   
-  class DocWatcher(watcherEvents.FileSystemEventHandler):
+  class BaseWatcher(watcherEvents.FileSystemEventHandler):
     """Base FS event handler"""
-    def __init__(self, indir=src, outdir=dest, build=True, debug=False):
+    def __init__(self, indir=src, outdir=dest, debug=False):
       self.indir = indir
       self.outdir = outdir
-      self.build = build
       self.debug = debug
       # start watching
       self.observer = Observer()
@@ -1144,13 +1179,34 @@ if args.watch:
           logger.info("watcher - %s", msg)
       # update paths
       ev.from_path = pathlib.Path(ev._src_path).relative_to(self.indir)
-      if ev.event_type == watcherEvents.EVENT_TYPE_MOVED: ev.to_path = pathlib.Path(ev._src_path).relative_to(self.indir)
+      if ev.event_type == watcherEvents.EVENT_TYPE_MOVED: ev.to_path = pathlib.Path(ev._dest_path).relative_to(self.indir)
+    
+    def on_moved(self, ev):
+      shutil.move(self.outdir / ev.from_path, self.outdir / ev.to_path)
+    
+    def on_created(self, ev):
+      if ev.is_directory: os.makedirs(self.outdir / ev.from_path)
+      else: shutil.copyfile(self.indir / ev.from_path, self.outdir / ev.from_path)
+    
+    def on_modified(self, ev):
+      if not ev.is_directory: self.on_created(ev)
+    
+    def on_deleted(self, ev):
+      if ev.is_directory: safe_delete(self.outdir / ev.from_path)
+      else: safe_delete(self.outdir / ev.from_path)
+    
+  
+  class DocWatcher(BaseWatcher):
+    """Base FS event handler"""
+    def __init__(self, build, *args, **kwargs):
+      super().__init__(*args, **kwargs)
+      self.build = build
     
     def on_moved(self, ev):
       if self.build and not ev.is_directory and ev.from_path.suffix == ".md":
         pagepath = self.outdir / (ev.from_path.stem + ".html")
         if not ev.to_path.suffix == ".md":
-          os.unlink(pagepath)
+          safe_delete(pagepath)
           shutil.copyfile(self.indir / ev.from_path, self.outdir / ev.to_path)
           try: del records[str(ev.from_path)]
           except: pass
@@ -1168,16 +1224,19 @@ if args.watch:
         elif not ev.from_path.suffix == ".tmpl": shutil.copyfile(self.indir / ev.from_path, self.outdir / ev.from_path)
     
     def on_deleted(self, ev):
-      if ev.is_directory: shutil.rmtree(self.outdir / ev.from_path)
+      if ev.is_directory: safe_delete(self.outdir / ev.from_path)
       elif self.build and ev.from_path.suffix == ".md":
-        os.unlink(self.outdir / ev.from_path.parent / (ev.from_path.stem + ".html"))
+        safe_delete(self.outdir / ev.from_path.parent / (ev.from_path.stem + ".html"))
         try: del records[str(ev.from_path)]
         except: pass
-      elif not ev.from_path.suffix == ".tmpl": os.unlink(self.outdir / ev.from_path)
+      elif not ev.from_path.suffix == ".tmpl": safe_delete(self.outdir / ev.from_path)
   
   # initialize observers
-  DocWatcher(src, debug=True)
-  DocWatcher(res, build=False, debug=True)
+  DocWatcher(True, src, debug=True)
+  DocWatcher(False, res, debug=True)
+  
+  if args.subcmd == "import":
+    BaseWatcher(importpath, importdest)
   
   def stop_watching():
     for watcher in watchers: watcher.stop()
@@ -1391,7 +1450,7 @@ if args.pack:
   
   print("Packaging output...")
   
-  if os.path.exists(dist): shutil.rmtree(dist)
+  if os.path.exists(dist): safe_delete(dist)
   os.mkdir(dist)
   
   # open archive streams
