@@ -562,10 +562,10 @@ indexTmplName = "template.tmpl"
 # Load records of docs
 recordsLoc = "_records.json"
 
-if os.path.exists(recordsLoc):
+try:
   with open(recordsLoc, "r", encoding="utf-8") as f:
     records = json.load(f)
-else: records = {}
+except: records = {}
 
 # English stemmer for indexing
 # See http://www.tartarus.org/~martin/PorterStemmer
@@ -1499,7 +1499,6 @@ if args.deploy:
     ghp_import(dest, mesg=msg, push=True, branch="site")
   except:
     print("Deployment failed.")
-
 
 # save changes on records
 with open(recordsLoc, "w", encoding="utf-8") as f:
