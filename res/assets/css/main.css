@@ -27,6 +27,10 @@ body {
   display: none;
 }
 
+aside, nav, footer, article, main, div {
+  display: block;
+}
+
 /* responsive support */
 
 .container-fluid {
@@ -1211,11 +1215,12 @@ body {
   border-radius: 0 10px 10px 0;
 }
 
-.main {
+main {
   max-height: 100vh;
   overflow: hidden;
   overflow-y: auto;
   scroll-behavior: smooth;
+  scroll-padding-top: 40px;
 }
 
 .body > :nth-child(2) {
@@ -1224,7 +1229,7 @@ body {
   padding-right: 10px;
 }
 
-.nav {
+nav {
   top: 0;
   height: 40px;
   background-color: #fff;
@@ -1237,14 +1242,14 @@ body {
   vertical-align: center;
 }
 
-.nav > * {
+nav > * {
   margin-top: auto;
   margin-bottom: auto;
   margin-right: 6px;
   margin-left: 6px;
 }
 
-.nav > a {
+nav > a {
   color: inherit;
   font-size: 10px;
   font-weight: bold;
@@ -1276,7 +1281,7 @@ form.search > input[type=submit] {
   flex: 1;
 }
 
-.content {
+article {
   padding-top: 10px;
   padding-bottom: 40px;
 }
@@ -1292,13 +1297,15 @@ form.search > input[type=submit] {
   width: 100%;
   max-width: 320px;
   box-shadow: 1px 0 1px 0 rgba(0,0,0,.25);
+  transition: left 150ms ease;
   position: fixed;
   padding: 8px;
   z-index: 8;
   top: 40px;
 }
 
-.footer {
+footer {
+  display: block;
   position: relative;
   padding: 8px;
   background-color: #ddd;
@@ -1307,23 +1314,75 @@ form.search > input[type=submit] {
   z-index: 9;
 }
 
-.footer :not(h1,h2,h3,h4,h5,h6) {
+footer :not(h1,h2,h3,h4,h5,h6) {
   font-size: 12px;
 }
 
-.footer a {
+footer a {
   color: #666 !important;
   text-decoration: none;
 }
 
+label[for=sidebar-toggle] {
+  width: 30px;
+  height: 30px;
+  cursor: pointer;
+  display: flex;
+  position: relative;
+  padding: 2px;
+}
+
+label[for=sidebar-toggle] > span {
+  background-color: red;
+  margin-top: 12px;
+  position: relative;
+}
+
+label[for=sidebar-toggle] > span::before,
+label[for=sidebar-toggle] > span::after {
+  background-color: blue;
+  position: absolute;
+}
+
+label[for=sidebar-toggle] > span,
+label[for=sidebar-toggle] > span::before,
+label[for=sidebar-toggle] > span::after {
+  content: "";
+  display: block;
+  height: 2px;
+  width: 100%;
+  transition: all 150ms ease;
+}
+
+label[for=sidebar-toggle] > span::before {
+  top: -8px;
+}
+
+label[for=sidebar-toggle] > span::after {
+  bottom: -8px;
+}
+
+input#sidebar-toggle:checked ~ label[for=sidebar-toggle] > span::before {
+  transform: rotate(-45deg);
+  width: 50%;
+}
+
+input#sidebar-toggle:checked ~ label[for=sidebar-toggle] > span::after {
+  transform: rotate(45deg);
+  width: 50%;
+}
+
 @media (min-width: 768px) {
-  .nav > form {
+  nav {
+    padding-left: 3px;
+  }
+  
+  nav > form {
     width: 40%;
   }
   
-  .content {
-    max-width: 65%;
-    margin-left: 5%;
+  label[for=sidebar-toggle] {
+    display: none;
   }
   
   .body {
@@ -1331,8 +1390,6 @@ form.search > input[type=submit] {
   }
   
   .sidebar {
-    width: 30%;
-    max-width: none;
     padding-top: 8px;
     box-shadow: none;
     position: sticky;
@@ -1399,6 +1456,7 @@ li.taskitem > p:nth-child(2) {
   right: -60px;
   transition: right ease 200ms;
   cursor: pointer;
+  border: 0;
   border-radius: 50%;
   background-color: #29d4ff;
 }
@@ -1589,27 +1647,27 @@ hr {
   width: calc(100% - 20px);
 }
 
-.content a {
+article a {
   text-decoration: none;
   color: #0099d1;
 }
 
-.content a:visited {
+article a:visited {
   color: #00d14d;
 }
 
-.content a:hover {
+article a:hover {
   text-decoration: underline;
 }
 
-.content a.headerlink {
+article a.headerlink {
   font-size: 50%;
   display: none;
   top: -0.75em;
   position: relative;
 }
 
-.content :hover > a.headerlink {
+article :hover > a.headerlink {
   display: inline-block;
 }
 
@@ -1628,7 +1686,7 @@ hr {
   top: -0.675em;
 }
 
-.content p, .content li, pre {
+article p, article li, pre {
   font-size: 12px;
 }
 

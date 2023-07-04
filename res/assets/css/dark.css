@@ -1,4 +1,4 @@
-html, body, .body, .content, .nav, .sidebar {
+html, body, .body, article, nav, aside, .sidebar {
   background-color: #222 !important;
   color: #ddd;
 }
@@ -48,12 +48,12 @@ div.admonition.caution {
   border-left-color: #f78700;
 }
 
-.footer {
+footer {
   color: #aaa;
   background-color: #444;
 }
 
-.footer a {
+footer a {
   color: #aaa !important;
 }
 

@@ -631,7 +631,7 @@ _window.ready(function(readyEvent) {
   if (!doc.root.length) doc.root = ".";
   doc.root += "/";
   
-  var contentEl = $(".content");
+  var contentEl = $("article");
   
   var searchBar = $("input[type=search]").first();
   
@@ -641,12 +641,23 @@ _window.ready(function(readyEvent) {
       doc.highlight(doc.query.highlight[i], contentEl[0]);
   }
   
+  var sidebarToggle = $("#sidebar-toggle"),
+      sidebarElem = $(".sidebar");
+  
+  sidebarToggle.click(function() {
+    if (sidebarToggle.prop("checked")) sidebarElem.css("left", "0");
+    else sidebarElem.css("left", "-330px");
+  })
+  
+  $("footer, article").click(function(ev) {
+    if (sidebarToggle.prop("checked")) sidebarToggle.click();
+  })
+  
   // toc highlight
   var headings = contentEl.find("h1,h2,h3,h4,h5,h6"),
       tocEl = $(".toc"),
-      docBody = $(".main"),
       backtotop = $(".backtotop"),
-      mainEl = $(".main");
+      mainEl = $("main");
   
   backtotop.click(function(e) {
     e.preventDefault();
@@ -664,7 +675,7 @@ _window.ready(function(readyEvent) {
     var idx, heading;
     for (idx = headings.length - 1; idx > -1; idx--) {
       heading = $(headings[idx]);
-      if (scrollTop > heading.offset().top - 75) {
+      if (scrollTop >= scrollTop + heading.offset().top - 80) {
         tocEl.find("a[href=\"#" + heading.attr("id") + "\"]").addClass("current");
         break;
       }
