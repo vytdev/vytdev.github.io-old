@@ -20,24 +20,106 @@ var doc = (function(factory) {
 var doc = scope.doc = {},
     version = doc.version = "0.2.1";
 
+// copies contents of src to dest
+doc.merge = function (src, dest, skipExists) {
+  var prop;
+  for (prop in src) {
+    if (hasProp(src, prop)) {
+      if (skipExists && hasProp(dest, prop)) continue;
+      dest[prop] = src[prop];
+    }
+  }
+  return dest;
+}
+
 // short names of common functions for faster retrival
-var hasProp = Function.prototype.call.bind(Object.prototype.hasOwnProperty);
+var hasProp = Function.prototype.call.bind(Object.prototype.hasOwnProperty),
+    setProto = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function(a, b) { a.__proto__ = b; }) ||
+        doc.merge;
 
-if (!hasProp(window, "jQuery")) throw "jQuery not found!"
+// regex
+if (typeof RegExp != "undefined") {
+  // support RegExp.escape
+  if (typeof RegExp.escape != "function") {
+    var escapeRegEx = /[\[\](){}<>|\\$^\-?.*+=]/g;
+    RegExp.escape = function(obj) {
+      if (typeof obj == "string") return obj.replace(escapeRegEx, "\\$&");
+      throw "RegExp.escape: Parameter must be a String!";
+    }
+  }
+}
 
-var _document = $(document),
-    _window = $(window);
+// support Array.prototype.sort
+if (typeof Array.prototype.sort != "function") {
+  // default sorting condition, sorts like dictionaries
+  function lexicographSort(a,b) {
+    a = "" + a;
+    b = "" + b;
+    return a > b
+      ? 1
+      : a < b
+        ? -1
+        : 0;
+  };
+  // this behaves exactly like the native function:
+  //    arr.sort(() => -1); // reverses an array as expected
+  //    arr.sort(() => 0);  // does noting in the array order, same with 1 or NaN
+  // Quick Sort algorithm (see https://en.m.wikipedia.org/wiki/Quicksort)
+  Array.prototype.sort = function(con) {
+    // This sort method speed depends on the:
+    //  - Order of items (if the array is already sorted or not)
+    //  - Difference between items (higher difference - slower it takes to finish)
+    //  - The conditioning function (on how conditioning function works)
+    
+    // prevent multiple calls
+    if (this.length <= 1) return this;
+    // no condition fn provided, use default lexicographic sorting
+    if (typeof con != "function")
+      con = lexicographSort;
+    // declare vars
+    var len = this.length - 1,
+        pivot = this[len],
+        left = [],
+        right = [],
+        idx, compared, val;
+    // here's the conditioning runs
+    for (idx = 0; idx < len; idx++) {
+      compared = this[idx];
+      val = con(pivot, compared);
+      if (isNaN(val) || val >= 0) {
+        left.push(compared);
+      }
+      else {
+        right.push(compared)
+      }
+    }
+    // return result
+    var result = left.sort(con);
+    result.push(pivot);
+    result = result.concat(right.sort(con));
+    len = result.length;
+    // update array
+    for (idx = 0; idx < len; idx++) {
+      this[idx] = result[idx];
+    }
+    return this;
+  }
+}
+
+// support Array.prototype.includes
+if (typeof Array.prototype.includes != "function") {
+  Array.prototype.includes = function(elm) {
+    var i;
+    for (i = 0; i < this.length; i++) {
+      if (this[i] == elm) return true;
+    }
+    return false;
+  }
+}
 
 var rwhitespace = /\s+/g,
     rurlquerydecode = /\+/g;
-
-if (typeof RegExp.escape != "function") {
-  var escapeRegEx = /[\[\](){}<>|\\$^\-?.*+=]/g;
-  RegExp.escape = function(obj) {
-    if (typeof obj == "string") return obj.replace(escapeRegEx, "\\$&");
-    throw "RegExp.escape: Parameter must be a String!";
-  }
-}
 
 // add queries
 doc.query = (function(){
@@ -58,11 +140,11 @@ doc.query = (function(){
 
 
 // highlights text on the doc (keeps the markup intact)
-var highlightSkipTags = ["BUTTON","SELECT","TEXTAREA"],
+var highlightSkipTags = ["BUTTON","SELECT","TEXTAREA", "SVG"],
     highlightClass = "highlight",
     noHighlightClass = "nohighlight";
 doc.highlight = function(text, node) {
-  if (!node) node = document.body;
+  if (!node) node = document.body || document.documentElement;
   if (typeof text != "string") throw "doc.highlight first argument 'text' must be a string!"
   var a = text.toLowerCase().split(rwhitespace); // highlight multiple words
   if (node.nodeType == document.TEXT_NODE) {
@@ -85,14 +167,14 @@ doc.highlight = function(text, node) {
     var i, n;
     for (i = 0; i < node.childNodes.length; i++) {
       n = node.childNodes[i];
-      if (n.tagName !== "SVG") doc.highlight(text, n);
+      doc.highlight(text, n);
     }
   }
 }
 
 // remove the current highlights on document
 doc.unhighlight = function(node) {
-  if (!node) node = document.body;
+  if (!node) node = document.body || document.documentElement;
   if (node.tagName == "SPAN" && node.className == highlightClass) {
     var p = node.previousSibling,
         n = node.nextSibling,
@@ -123,15 +205,6 @@ doc.unhighlight = function(node) {
       }
     }
   }
-}
-
-// simple toast api
-var queuedToasts = [];
-
-doc.toast = function(msg) {
-  queuedToasts.push(msg);
-  doc.dispatchEvent("toastQueued", msg);
-  return msg;
 }
 
 // ISO-639-1 language codes and names
@@ -609,14 +682,14 @@ EventEmitter.prototype = {
       l = this.eventListeners[i];
       if (!l) continue;
       if (l.ev == ev || !l.ev.length)
-        this.eventListeners[i].fn.call(s, args);
+        this.eventListeners[i].fn.apply(s, args);
       if (l.once) this.eventListeners[i] = null;
     };
     if (!s.cancel && f) action.call(s);
   }
 };
 
-Object.setPrototypeOf(doc, new EventEmitter());
+setProto(doc, new EventEmitter());
 
 function removeQueryHighlight() {
   doc.unhighlight(contentEl[0]);
@@ -625,12 +698,22 @@ function removeQueryHighlight() {
   window.history.replaceState({}, "", url)
 };
 
-_window.ready(function(readyEvent) {
+// wait for page data until loaded
+doc.addEventListener("dataLoaded", function(page) {
   // website root location
-  doc.root = doc.page.location.replace(/[^\/]+/g, "..").slice(3);
+  doc.root = page.location.replace(/[^\/]+/g, "..").slice(3);
   if (!doc.root.length) doc.root = ".";
   doc.root += "/";
-  
+}, { once: true });
+
+// this part needs jQuery
+if (!hasProp(window, "jQuery")) throw "jQuery not found!";
+
+var _document = $(document),
+    _window = $(window);
+
+// wait until dom fully loaded
+_window.ready(function(readyEvent) {
   var contentEl = $(".article");
   
   var searchBar = $("input[type=search]").first();
@@ -641,6 +724,7 @@ _window.ready(function(readyEvent) {
       doc.highlight(doc.query.highlight[i], contentEl[0]);
   }
   
+  // sidebar behaviour for devices <768px width
   var sidebarToggle = $("#sidebar-toggle"),
       sidebarElem = $(".sidebar");
   
@@ -653,7 +737,7 @@ _window.ready(function(readyEvent) {
     if (sidebarToggle.prop("checked")) sidebarToggle.click();
   })
   
-  // toc highlight
+  // toc highlight and back-to-top btn
   var headings = contentEl.find("h1,h2,h3,h4,h5,h6"),
       tocEl = $(".toc"),
       backtotop = $(".backtotop"),
@@ -671,6 +755,7 @@ _window.ready(function(readyEvent) {
     if (scrollTop > 20) backtotop.css("right", "4px");
     else backtotop.css("right", "-60px");
     
+    // toc highlight
     tocEl.find("a.current").removeClass("current");
     var idx, heading;
     for (idx = headings.length - 1; idx > -1; idx--) {
@@ -711,35 +796,6 @@ _window.ready(function(readyEvent) {
       }
     }
   });
-  
-  // toast element
-  var toastBox = $(".toast"), hasToast;
-  
-  function toastHandler() {
-    toastBox.removeClass("active");
-    var item = queuedToasts.shift();
-    if (!item) return;
-    var lastToast = toastBox[0].childNodes[0];
-    if (lastToast) toastBox[0].removeChild(lastToast);
-    toastBox.append($("<div>" + item + "</div>"));
-    toastBox.addClass("active");
-    hasToast = true;
-    console.log("toast shown");
-    scope.setTimeout(function() {
-      toastBox.removeClass("active");
-      hasToast = false;
-      if (queuedToasts.length) toastHandler();
-    }, 5000)
-    doc.dispatchEvent("toastShown", item);
-  }
-  
-  // automatically show the toast on queue
-  doc.addEventListener("toastQueued", function() {
-    if (!hasToast && queuedToasts.length === 1) toastHandler();
-  })
-  
-  // show toasts queued before the dom fully loaded
-  if (queuedToasts.length) toastHandler();
   
   // trigger ready event
   doc.dispatchEvent("ready", [readyEvent]);

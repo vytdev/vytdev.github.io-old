@@ -1473,36 +1473,6 @@ li.taskitem > p:nth-child(2) {
   width: 20px;
 }
 
-@keyframes toast-animation {
-  from, to {
-    left: -100%;
-  }
-  10%, 90% {
-    left: 0;
-  }
-}
-
-.toast {
-  display: block;
-  left: -100%;
-  bottom: 0;
-  position: fixed;
-  min-height: 40px;
-  max-height: 50%;
-  overflow-y: auto;
-  width: 75%;
-  margin: 2px;
-  z-index: 10;
-  background-color: #fff;
-  border-color: 1px solid #888;
-  border-radius: 3px;
-  padding: 4px;
-}
-
-.toast.active {
-  animation: toast-animation 5s ease 1;
-}
-
 .snippet {
   margin-top: 10px;
   margin-bottom: 10px;

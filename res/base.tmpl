@@ -37,7 +37,7 @@
   <script src="{{ 'assets/js/eruda.js'|url }}" onload="eruda.init()"></script>{% endif %}
   <script src="{{ 'assets/js/jquery.js'|url }}" type="text/javascript"></script>
   <script src="{{ 'assets/js/util.js'|url }}" type="text/javascript"></script>
-  <script type="text/javascript">doc.page = {{ doc.data }}</script>
+  <script type="text/javascript">doc.dispatchEvent("dataloaded", [doc.page = {{ doc.data }}]);</script>
   <link rel="shortcut icon" type="image/x-icon" href="{{ 'favicon.ico'|url }}" />
   <link rel="stylesheet" type="text/css" href="{{ 'assets/css/main.css'|url }}" />
   <link rel="stylesheet" type="text/css" href="{{ 'assets/css/dark.css'|url }}" id="csstheme" media="(prefers-color-scheme: dark)" />
@@ -85,10 +85,9 @@
             {% endblock %}
           </div>
         </div>
-        <button class="backtotop">
+        <div class="backtotop">
           <!--octicons arrow-up-24.svg--><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M18.655 10.405a.75.75 0 0 1-1.06 0l-4.97-4.97v14.44a.75.75 0 0 1-1.5 0V5.435l-4.97 4.97a.749.749 0 0 1-1.275-.326.749.749 0 0 1 .215-.734l6.25-6.25a.75.75 0 0 1 1.06 0l6.25 6.25a.75.75 0 0 1 0 1.06Z"/></svg>
-        </button>
-        <div class="toast"></div>
+        </div>
       </div>
       <div class="footer container-fluid">
         {% block footer -%}
