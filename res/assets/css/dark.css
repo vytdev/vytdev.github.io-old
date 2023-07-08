@@ -1,4 +1,4 @@
-html, body, .body, article, nav, aside, .sidebar {
+html, body, .body, .article, .nav, .sidebar {
   background-color: #222 !important;
   color: #ddd;
 }
@@ -48,12 +48,12 @@ div.admonition.caution {
   border-left-color: #f78700;
 }
 
-footer {
+.footer {
   color: #aaa;
   background-color: #444;
 }
 
-footer a {
+.footer a {
   color: #aaa !important;
 }
 
@@ -65,9 +65,20 @@ footer a {
   color: #444;
 }
 
-input:autofill, input:-webkit-autofill {
-  background-color: rgba(14,58,107,0.556) !important;
-  color: #888 !important;
+form.search > input, form.search > label {
+  background-color: #383838;
+}
+
+/* hack for webkit autofill, thx:
+https://css-tricks.com/snippets/css/change-autocomplete-styles-webkit-browsers/
+*/
+input:autofill, input:-webkit-autofill,
+input:autofill:focus, input:-webkit-autofill:focus,
+input:autofill:hover, input:-webkit-autofill:hover {
+  color: #bbb;
+  -webkit-text-fill-color: #bbb;
+  background-color: #001b54;
+  transition: background-color 9999s ease-in-out 0s;
 }
 
 pre { line-height: 125%; }

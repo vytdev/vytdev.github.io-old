@@ -631,7 +631,7 @@ _window.ready(function(readyEvent) {
   if (!doc.root.length) doc.root = ".";
   doc.root += "/";
   
-  var contentEl = $("article");
+  var contentEl = $(".article");
   
   var searchBar = $("input[type=search]").first();
   
@@ -649,7 +649,7 @@ _window.ready(function(readyEvent) {
     else sidebarElem.css("left", "-330px");
   })
   
-  $("footer, article").click(function(ev) {
+  $(".footer, .article").click(function(ev) {
     if (sidebarToggle.prop("checked")) sidebarToggle.click();
   })
   
@@ -657,7 +657,7 @@ _window.ready(function(readyEvent) {
   var headings = contentEl.find("h1,h2,h3,h4,h5,h6"),
       tocEl = $(".toc"),
       backtotop = $(".backtotop"),
-      mainEl = $("main");
+      mainEl = $(".main");
   
   backtotop.click(function(e) {
     e.preventDefault();
@@ -713,7 +713,7 @@ _window.ready(function(readyEvent) {
   });
   
   // toast element
-  var toastBox = $(".toast");
+  var toastBox = $(".toast"), hasToast;
   
   function toastHandler() {
     toastBox.removeClass("active");
@@ -723,9 +723,11 @@ _window.ready(function(readyEvent) {
     if (lastToast) toastBox[0].removeChild(lastToast);
     toastBox.append($("<div>" + item + "</div>"));
     toastBox.addClass("active");
+    hasToast = true;
     console.log("toast shown");
-    setTimeout(function() {
+    scope.setTimeout(function() {
       toastBox.removeClass("active");
+      hasToast = false;
       if (queuedToasts.length) toastHandler();
     }, 5000)
     doc.dispatchEvent("toastShown", item);
@@ -733,7 +735,7 @@ _window.ready(function(readyEvent) {
   
   // automatically show the toast on queue
   doc.addEventListener("toastQueued", function() {
-    if (queuedToasts.length === 1) toastHandler();
+    if (!hasToast && queuedToasts.length === 1) toastHandler();
   })
   
   // show toasts queued before the dom fully loaded

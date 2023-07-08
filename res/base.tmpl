@@ -45,12 +45,14 @@
 {% block head %}{% endblock %}
 
 </head><body>
-  <main>
+  <div class="main">
     <div>
       <div class="body">
-        <nav role="navigation">
+        <div class="nav" role="navigation">
+          {% block sidebartoggle %}
           <input class="hide" type="checkbox" id="sidebar-toggle" />
           <label for="sidebar-toggle"><span></span></label>
+          {% endblock %}
           <a href="https://vytdev.github.io/"><img width="24px" height="24px" src="{{ 'assets/logo.svg'|url }}" /></a>
           <form class="search" method="GET" action="{{ 'search.html'|url }}">
             <input placeholder="Search..." type="search" name="q" />
@@ -64,31 +66,31 @@
           <a class="hide-xs show-md" href="{{ 'wiki/index.html'|url }}">Wiki</a>
           <a class="hide-xs show-md" href="{{ 'projects/index.html'|url }}">Projects</a>
           <a class="hide-xs show-md" href="{{ 'help/index.html'|url }}">Help</a>
-        </nav>
+        </div>
         <div class="container-fluid grid">
           {% block outersidebar %}
           <div class="sidebar col-lg-3">
-            <aside>
+            <div>
               {% block sidebar %}
               <h3>In this page</h3>
 {{ doc.toc }}
               {% endblock %}
-            </aside>
+            </div>
           </div>
           {% endblock %}
-          <article class="col-xs-1">
+          <div class="article col-xs-1">
             {% block content %}
 <h1>{{ doc.title|safe }}</h1>
 {{ doc.content }}
             {% endblock %}
-          </article>
+          </div>
         </div>
         <button class="backtotop">
           <!--octicons arrow-up-24.svg--><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M18.655 10.405a.75.75 0 0 1-1.06 0l-4.97-4.97v14.44a.75.75 0 0 1-1.5 0V5.435l-4.97 4.97a.749.749 0 0 1-1.275-.326.749.749 0 0 1 .215-.734l6.25-6.25a.75.75 0 0 1 1.06 0l6.25 6.25a.75.75 0 0 1 0 1.06Z"/></svg>
         </button>
         <div class="toast"></div>
       </div>
-      <footer class="container-fluid">
+      <div class="footer container-fluid">
         {% block footer -%}
         <div class="grid">
           <div class="col-xs-1 col-lg-3">
@@ -151,8 +153,8 @@
         <p>Copyright &copy; 2022, VYT. All rights reserved.</p>
         <p>This documentation is licensed under the <a href="{{ 'license.html'|url }}">MIT License</a>.</p>
         {%- endblock %}
-      </footer>
+      </div>
     </div>
-  </main>
+  </div>
 </body></html>
 

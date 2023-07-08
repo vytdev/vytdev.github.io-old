@@ -1,5 +1,5 @@
 /**
- * main.css
+ * .main.css
  */
 
 @charset "utf-8";
@@ -25,10 +25,6 @@ body {
 
 ::-webkit-scrollbar {
   display: none;
-}
-
-aside, nav, footer, article, main, div {
-  display: block;
 }
 
 /* responsive support */
@@ -1201,6 +1197,7 @@ aside, nav, footer, article, main, div {
 }
 
 .toc a {
+  padding: 3px;
   padding-left: 8px;
   border-left: 3px solid #aaa;
   display: inline-block;
@@ -1215,7 +1212,7 @@ aside, nav, footer, article, main, div {
   border-radius: 0 10px 10px 0;
 }
 
-main {
+.main {
   max-height: 100vh;
   overflow: hidden;
   overflow-y: auto;
@@ -1229,7 +1226,7 @@ main {
   padding-right: 10px;
 }
 
-nav {
+.nav {
   top: 0;
   height: 40px;
   background-color: #fff;
@@ -1242,14 +1239,14 @@ nav {
   vertical-align: center;
 }
 
-nav > * {
+.nav > * {
   margin-top: auto;
   margin-bottom: auto;
   margin-right: 6px;
   margin-left: 6px;
 }
 
-nav > a {
+.nav > a {
   color: inherit;
   font-size: 10px;
   font-weight: bold;
@@ -1281,7 +1278,7 @@ form.search > input[type=submit] {
   flex: 1;
 }
 
-article {
+.article {
   padding-top: 10px;
   padding-bottom: 40px;
 }
@@ -1304,7 +1301,7 @@ article {
   top: 40px;
 }
 
-footer {
+.footer {
   display: block;
   position: relative;
   padding: 8px;
@@ -1314,11 +1311,11 @@ footer {
   z-index: 9;
 }
 
-footer :not(h1,h2,h3,h4,h5,h6) {
+.footer :not(h1,h2,h3,h4,h5,h6) {
   font-size: 12px;
 }
 
-footer a {
+.footer a {
   color: #666 !important;
   text-decoration: none;
 }
@@ -1333,14 +1330,12 @@ label[for=sidebar-toggle] {
 }
 
 label[for=sidebar-toggle] > span {
-  background-color: red;
   margin-top: 12px;
   position: relative;
 }
 
 label[for=sidebar-toggle] > span::before,
 label[for=sidebar-toggle] > span::after {
-  background-color: blue;
   position: absolute;
 }
 
@@ -1349,7 +1344,8 @@ label[for=sidebar-toggle] > span::before,
 label[for=sidebar-toggle] > span::after {
   content: "";
   display: block;
-  height: 2px;
+  background-color: #888;
+  height: 3px;
   width: 100%;
   transition: all 150ms ease;
 }
@@ -1364,20 +1360,24 @@ label[for=sidebar-toggle] > span::after {
 
 input#sidebar-toggle:checked ~ label[for=sidebar-toggle] > span::before {
   transform: rotate(-45deg);
-  width: 50%;
+  width: 75%;
+  top: -6.15px;
+  left: -4px;
 }
 
 input#sidebar-toggle:checked ~ label[for=sidebar-toggle] > span::after {
   transform: rotate(45deg);
-  width: 50%;
+  width: 75%;
+  bottom: -6.15px;
+  left: -4px;
 }
 
 @media (min-width: 768px) {
-  nav {
+  .nav {
     padding-left: 3px;
   }
   
-  nav > form {
+  .nav > form {
     width: 40%;
   }
   
@@ -1389,7 +1389,13 @@ input#sidebar-toggle:checked ~ label[for=sidebar-toggle] > span::after {
     position: relative;
   }
   
+  .article {
+    width: 65%;
+    max-width: 65%;
+  }
+  
   .sidebar {
+    max-width: 35%;
     padding-top: 8px;
     box-shadow: none;
     position: sticky;
@@ -1647,27 +1653,27 @@ hr {
   width: calc(100% - 20px);
 }
 
-article a {
+.article a {
   text-decoration: none;
   color: #0099d1;
 }
 
-article a:visited {
+.article a:visited {
   color: #00d14d;
 }
 
-article a:hover {
+.article a:hover {
   text-decoration: underline;
 }
 
-article a.headerlink {
+.article a.headerlink {
   font-size: 50%;
   display: none;
   top: -0.75em;
   position: relative;
 }
 
-article :hover > a.headerlink {
+.article :hover > a.headerlink {
   display: inline-block;
 }
 
@@ -1686,8 +1692,8 @@ article :hover > a.headerlink {
   top: -0.675em;
 }
 
-article p, article li, pre {
-  font-size: 12px;
+p, li, pre {
+  font-size: 12px !important;
 }
 
 pre {
