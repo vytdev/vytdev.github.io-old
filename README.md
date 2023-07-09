@@ -13,5 +13,6 @@ See the [contribution guidelines](https://vytdev.github.io/contributing)
 
 ## License
 
-Copyright &copy; 2022, Vincent Yanzee J. Tan. This project is licensed under the
-[MIT License](LICENSE). Go [here](https://vytdev.github.io/license) for more details.
+Copyright &copy; 2022-2023, Vincent Yanzee J. Tan and contributors. This project is
+licensed under the [MIT License](LICENSE). Go [here](https://vytdev.github.io/license)
+for more details.
