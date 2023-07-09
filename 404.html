@@ -28,9 +28,17 @@
     // handle scenario, no language specified
     (function(path) {
       if (!path.startsWith("/en")) {
-        document.title = "Redirecting...";
-        document.location.replace("/en" + path);
-        document.body.style.display = "none";
+        var ran = false;
+        var loc = "/en" + path;
+        document.addEventListener("DOMContentLoaded", action);
+        window.onload = action;
+        function action() {
+          if (ran) return;
+          ran = true;
+          document.write("<p>Redirecting to <a href=\"" + loc + "\">" + loc + "</a>...</p>");
+          document.title = "Redirecting...";
+        };
+        document.location.replace(loc);
       }
     })(document.location.pathname);
   </script>
@@ -121,7 +129,7 @@
             </div>
           </div>
         </div>
-        <p>Copyright &copy; 2022, VYT. All rights reserved.</p>
+        <p>Copyright &copy; 2022-2023, VYT and contributors. All rights reserved.</p>
         <p>This documentation is licensed under the <a href="/license.txt">MIT License</a>.</p>
       </div>
     </div>

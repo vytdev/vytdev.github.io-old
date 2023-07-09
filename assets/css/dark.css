@@ -57,6 +57,11 @@ div.admonition.caution {
   color: #aaa !important;
 }
 
+.pagecard {
+  background-color: #333;
+  border-color: #666;
+}
+
 .monochromatic {
   filter: invert(1);
 }
