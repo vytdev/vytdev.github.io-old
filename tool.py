@@ -487,22 +487,15 @@ class SnippetsBlockProcessor(MarkdownBlockProcessor):
     div.set("data-filename", filename)
     div.text = self.md.htmlStash.store(result)
 
-# Tree processor to wrap block elements into a div, for handling overflows
-class OverflowTreeProcessor(MarkdownTreeProcessor):
-  def __init__(self, elem, cssclass, *args):
-    super().__init__(*args)
-    self.element_parents = ".//%s/.." % (elem)
-    self.element_xpath = "./" + elem
-    self.cssclass = cssclass
-  
+class TableWrapper(MarkdownTreeProcessor):
   def run(self, root):
-    for parents in root.findall(self.element_parents):
-      for el in parents.findall(self.element_xpath):
-        parents.remove(el)
-        div = ET.SubElement(parents, "div")
-        div.set("class", self.cssclass)
-        div.set("style", "overflow: auto;")
-        div.append(el)
+    for idx, val in enumerate(root):
+      if val.tag != "table" or val.get("class") == "snippettable": continue
+      root.remove(val)
+      wrapper = ET.Element("div")
+      wrapper.set("class", "table")
+      wrapper.append(val)
+      root.insert(idx, wrapper)
 
 class CustomExtension(MarkdownBaseExtension):
   def extendMarkdown(self, md):
@@ -520,8 +513,8 @@ class CustomExtension(MarkdownBaseExtension):
     # block processors
     md.parser.blockprocessors.register(TaskListBlockProcessor(md.parser), "tasklist", 100)
     md.parser.blockprocessors.register(SnippetsBlockProcessor(md.parser, md=md), "snippets", 110)
-    # tree processors
-    md.treeprocessors.register(OverflowTreeProcessor("table", "table", md), "handle_table_overflow", 50)
+    # table block processors
+    md.treeprocessors.register(TableWrapper(md), 'tablewrapper', 0)
   
   def reset(self):
     self.md.current_loc = None
@@ -549,7 +542,8 @@ md = markdown.Markdown(extensions=[CustomExtension(), "extra", "admonition", "to
     "end_url": ".html"
   },
   "codehilite":{
-    "css_class": "snippet"
+    "css_class": "snippet",
+    "linenums": False
   }
 })
 # you can still edit template files while in watch mode

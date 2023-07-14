@@ -1457,6 +1457,10 @@ li.taskitem > p:nth-child(2) {
   margin: 0;
 }
 
+ul, ol {
+  padding-left: 16px;
+}
+
 :not(.nohighlight) span.highlight:not(.nohighlight), mark {
   background-color: #ffff00;
   color: inherit;
@@ -1610,6 +1614,11 @@ noscript {
   margin-bottom: 10px;
 }
 
+.article h1, .article h2, .article h3,
+.article h4, .article h5, .article h6 {
+  font-weight: normal;
+}
+
 h1 {
   font-size: 2em;
 }
@@ -1673,7 +1682,7 @@ a.headerlink {
   top: -0.675em;
 }
 
-p, li, pre {
+p, li, pre, td, dd {
   font-size: 12px !important;
 }
 
@@ -1689,6 +1698,15 @@ input {
 
 code, pre {
   font-family: monospace;
+}
+
+:not(pre) code {
+  background-color: rgba(0,0,0,.15);
+  border-radius: 4px;
+}
+
+.snippet code {
+  background-color: inherit;
 }
 
 h1 a:not(.headerlink), h2 a:not(.headerlink), h3 a:not(.headerlink),
@@ -1712,12 +1730,27 @@ h4 a:not(.headerlink), h5 a:not(.headerlink), h6 a:not(.headerlink) {
   text-decoration: line-through;
 }
 
-div.table {
-  overflow: hidden;
-  overflow-x: auto;
+dd {
+  padding: 8px;
+  margin-left: 2em;
 }
 
-div.table table {
+dt {
+  font-size: 1em;
+  font-weight: bold;
+}
+
+dt code {
+  background-color: transparent !important;
+}
+
+div.table {
+  overflow: auto !important;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+table {
   width: 100%;
   border-collapse: collapse;
   border-radius: 3px;
@@ -1729,7 +1762,7 @@ div.table table, div.table thead, div.table tbody, div.table tr, div.table th, d
 }
 
 div.table thead, div.table th {
-  background-color: #aaa;
+  background-color: #ddd;
 }
 
 /* printing styles */

@@ -48,6 +48,10 @@ div.admonition.caution {
   border-left-color: #f78700;
 }
 
+dt {
+  color: #fff;
+}
+
 .footer {
   color: #aaa;
   background-color: #444;
@@ -64,6 +68,18 @@ div.admonition.caution {
 
 .monochromatic {
   filter: invert(1);
+}
+
+th, thead {
+  background-color: #444 !important;
+}
+
+:not(.snippet) code {
+  background-color: rgba(60,60,60,.45);
+}
+
+.snippet code {
+  background-color: inherit;
 }
 
 :not(.nohighlight) span.highlight:not(.nohighlight), mark {
