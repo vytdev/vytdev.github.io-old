@@ -30,5 +30,40 @@
     <lastmod>2023-07-09T00:00:00+00:00</lastmod>
     <changefreq>daily</changefreq>
     <priority>1</priority>
+  </url><url>
+    <loc>https://vytdev.github.io/en/projects/creators-api/contributing</loc>
+    <lastmod>2023-07-12T00:00:00+00:00</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>1</priority>
+  </url><url>
+    <loc>https://vytdev.github.io/en/projects/creators-api/setup</loc>
+    <lastmod>2023-07-12T00:00:00+00:00</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>1</priority>
+  </url><url>
+    <loc>https://vytdev.github.io/en/projects/creators-api/api/index</loc>
+    <lastmod>2023-07-12T00:00:00+00:00</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>1</priority>
+  </url><url>
+    <loc>https://vytdev.github.io/en/projects/creators-api/api/app</loc>
+    <lastmod>2023-07-12T00:00:00+00:00</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>1</priority>
+  </url><url>
+    <loc>https://vytdev.github.io/en/projects/creators-api/api/config</loc>
+    <lastmod>2023-07-13T00:00:00+00:00</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>1</priority>
+  </url><url>
+    <loc>https://vytdev.github.io/en/projects/creators-api/api/events</loc>
+    <lastmod>2023-07-14T00:00:00+00:00</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>1</priority>
+  </url><url>
+    <loc>https://vytdev.github.io/en/projects/creators-api/api/threading</loc>
+    <lastmod>2023-07-14T00:00:00+00:00</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>1</priority>
   </url>
 </urlset>
