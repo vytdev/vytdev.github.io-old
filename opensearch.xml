@@ -1,8 +1,8 @@
 <OpenSearchDescription xmlns="http://a9.com/-/spec/opensearch/1.1/" xmlns:moz="http://www.mozilla.org/2006/browser/search/">
-  <ShortName>VYT</ShortName>
-  <Description>Search VYT</Description>
-  <InputEncoding>UTF-8</InputEncoding>
-  <Image width="256" height="256" type="image/x-icon">https://vytdev.github.io/favicon.ico</Image>
-  <Url type="text/html" method="get" template="https://vytdev.github.io/search?q={searchTerms}&amp;ref=opensearch"/>
-  <moz:SearchForm>https://vytdev.github.io/search</moz:SearchForm>
+    <ShortName>VYT</ShortName>
+    <Description>Search VYT</Description>
+    <InputEncoding>UTF-8</InputEncoding>
+    <Image width="256" height="256" type="image/x-icon">https://vytdev.github.io/favicon.ico</Image>
+    <Url type="text/html" method="get" template="https://vytdev.github.io/search?q={searchTerms}&amp;ref=opensearch" />
+    <moz:SearchForm>https://vytdev.github.io/search</moz:SearchForm>
 </OpenSearchDescription>
