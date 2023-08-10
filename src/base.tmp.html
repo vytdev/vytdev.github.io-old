@@ -1,0 +1,211 @@
+<!doctype html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+        <meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0" />
+        <meta name="theme-color" content="#ffffff" />
+        
+        <!-- metadata -->
+        <title>{{ doc.title|safe }}</title>
+        <meta name="description" content="{{ doc.about|safe }}" />
+        <meta name="revised" content="{{ doc.updated|safe }}" />
+        <meta name="author" content="{{ doc.author|safe }}" />
+        
+        <!-- open graph -->
+        <meta property="og:title" content="{{ doc.title|safe }}" />
+        <meta property="og:description" content="{{ doc.about|safe }}" />
+        <meta property="og:url" content=" {{ doc.canonical }}" />
+        <meta property="og:site_name" content="VYT Docs" />
+        <meta property="og:type" content="website" />
+        <meta name="og:locale" content="en_US" />
+        
+        <!-- twitter -->
+        <meta property="twitter:title" content="{{ doc.title|safe }}" />
+        <meta name="twitter:card" content="summary" />
+        
+        <!-- google and other seo -->
+        <meta name="language" content="en" />
+        <meta name="robots" content="index,follow" />
+        <meta name="generator" content="Python3" />
+        <meta name="keywords" content="{{ ', '.join(doc.keywords) }}" />
+        <link rel="canonical" href="{{ doc.canonical }}" />
+        <link rel="EditURI" href="https://github.com/vytdev/vytdev.github.io/edit/master/docs/{{ doc.location }}.md" />
+        <link rel="prev" href="{{ doc.prev }}" />
+        <link rel="next" href="{{ doc.next }}" />
+        <script type="application/json+ld">{{ seo }}</script>
+        
+        <!-- preload -->
+        <link rel="preload" as="font" href="{{ 'assets/fonts/noto_sans/NotoSans-Regular.ttf'|url }}" />
+        <link rel="preload" as="font" href="{{ 'assets/fonts/source_code_pro/SourceCodePro-Regular.ttf'|url }}" />
+        <link rel="preload" as="style" type="text/css" href="{{ 'assets/css/responsive.css'|url }}" />
+        <link rel="preload" as="style" type="text/css" href="{{ 'assets/css/layout.css'|url }}" />
+        <link rel="preload" as="style" type="text/css" href="{{ 'assets/css/browser.css'|url }}" />
+        <link rel="preload" as="style" type="text/css" href="{{ 'assets/css/snippets.css'|url }}" />
+        <link rel="preload" as="style" type="text/css" href="{{ 'assets/css/dark.css'|url }}" />
+        <link rel="preload" as="style" type="text/css" href="{{ 'assets/css/snippets_dark.css'|url }}" />
+        {% if config.debug -%}
+        <link rel="preload" as "script" type="text/javascript" href="{{ 'assets/js/eruda.js'|url }}" />
+        {% endif %}
+        <link rel="preload" as="script" type="text/javascript" href="{{ 'assets/js/jquery.js'|url }}" />
+        <link rel="preload" as="script" type="text/javascript" href="{{ 'assets/js/util.js'|url }}" />
+        <link rel="preload" as="image" type="image/x-icon" href="{{ 'favicon.ico'|url }}" />
+        
+        <!-- resources -->
+        <link rel="manifest" href="{{ 'manifest.json'|url }}" />
+        <link rel="search" type="application/opensearchdescription+xml" href="{{ 'opensearch.xml'|url }}" />
+        <link rel="stylesheet" type="text/css" href="{{ 'assets/css/responsive.css'|url }}" />
+        <link rel="stylesheet" type="text/css" href="{{ 'assets/css/layout.css'|url }}" />
+        <link rel="stylesheet" type="text/css" href="{{ 'assets/css/browser.css'|url }}" />
+        <link rel="stylesheet" type="text/css" href="{{ 'assets/css/snippets.css'|url }}" />
+        <link rel="stylesheet" type="text/css" href="{{ 'assets/css/dark.css'|url }}" media="(prefers-color-scheme: dark)" />
+        <link rel="stylesheet" type="text/css" href="{{ 'assets/css/snippets_dark.css'|url }}" media="(prefers-color-scheme: dark)" />
+        {% if config.debug -%}
+        <script type="text/javascript" src="{{ 'assets/js/eruda.js'|url }}" onload="eruda.init()"></script>
+        {% endif -%}
+        <script type="text/javascript" src="{{ 'assets/js/jquery.js'|url }}"></script>
+        <script type="text/javascript" src="{{ 'assets/js/util.js'|url }}"></script>
+        
+        <!-- page information -->
+        <script type="text/javascript">doc.page = {{ meta }}</script>
+    </head><body>
+
+    <div class="main">
+        <div>
+            <div class="body">
+                <div class="nav no-print" role="navigation">
+                    {% block sidebartoggle %}
+                    <input class="hide" type="checkbox" id="sidebar-toggle" />
+                    <label for="sidebar-toggle"><span></span></label>
+                    {% endblock %}
+                    <a href="https://vytdev.github.io/"><img width="24px" height="24px" src="{{ 'assets/logo.svg'|url }}" /></a>
+                    <form class="search" method="GET" action="{{ 'search.html'|url }}">
+                        <input placeholder="Search..." type="search" name="q" />
+                        <input type="submit" value="" id="nav-search-submit-btn" />
+                        <label for="nav-search-submit-btn">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" class="search-icon">
+                                <path fill-rule="nonzero" fill="currentColor" d="M15.5 14h-.79l-.28-.27a6.5 6.5 0 001.48-5.34c-.47-2.78-2.79-5-5.59-5.34a6.505 6.505 0 00-7.27 7.27c.34 2.8 2.56 5.12 5.34 5.59a6.5 6.5 0 005.34-1.48l.27.28v.79l4.25 4.25c.41.41 1.08.41 1.49 0 .41-.41.41-1.08 0-1.49L15.5 14zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"></path>
+                            </svg>
+                        </label>
+                    </form>
+                    <a class="hide-xs show-md" href="{{ 'wiki/index.html'|url }}">Wiki</a>
+                    <a class="hide-xs show-md" href="{{ 'projects/index.html'|url }}">Projects</a>
+                    <a class="hide-xs show-md" href="{{ 'help/index.html'|url }}">Help</a>
+                </div>
+                <div class="container-fluid grid">
+                    {% block outersidebar %}
+                    <div class="sidebar col-lg-3 no-print">
+                        <div>
+                            {% block sidebar %}
+                            <h3>In this page</h3>
+{{ toc }}
+                            {% block pagecard %}
+                            <div class="pagecard">
+                                <h2>{{ doc.title|safe }}</h2>
+                                <p>{{ doc.about|safe }}</p>
+                                <p><em>Written by {% if doc.contributors|length %}our contributors:{% else %}anonymous.{% endif %}</em></p>
+                                {% if doc.contributors|length -%}
+                                <ul class="list-box">
+                                {%- for person in doc.contributors %}
+                                    <li><p>{% if person.url %}<a href="{{ person.url }}">{% endif %}{{ person.name|safe }}{% if person.url %}</a>{% endif %}</p></li>
+                                {%- endfor %}
+                                </ul>
+                                {%- endif %}
+                                <p>Learn how to <a href="{{ 'contributing.html'|url }}">contribute</a>.</p>
+                                <h4>Navigation</h4>
+                                <ul>
+                                    <li><a href="https://github.com/vytdev/vytdev.github.io/blob/master/src/{{ doc.location }}.md">View source code</a></li>
+                                    <li><a href="https://github.com/vytdev/vytdev.github.io/edit/master/src/{{ doc.location }}.md">Edit page on GitHub</a></li>
+                                    <li><a href="https://github.com/vytdev/vytdev.github.io/issues/new?template=page.yml&docurl={{ doc.location|urlencode|replace('/', '%2F') }}">Report page content</a></li>
+                                    <li><a href="javascript:print()">Print this page</a></li>
+                                </ul>
+                                <p><em>Last updated: {{ doc.updated }}</em></p>
+                            </div>
+                            {% endblock %}
+                            {% endblock %}
+                        </div>
+                    </div>
+                    {% endblock %}
+                    <div class="article col-xs-1">
+                        {% block content %}
+{{ content }}
+                        {% endblock %}
+                    </div>
+                </div>
+                <div class="owner-print print-only">
+                    <h3 class="text-center">VYT Docs</h3>
+                    <p class="text-center"><em>Simple documentations that everyone can contribute.</em></p>
+                    <h4>{{ doc.title|safe }}</h4>
+                    <p>{{ doc.about|safe }}</p>
+                    <p><em>Last updated: {{ doc.updated }}</em></p>
+                    <p><em>Written by {% if doc.contributors|length %}our contributors:{% else %}anonymous.{% endif %}</em></p>
+                    {% if doc.contributors|length -%}
+                    <ul class="list-box">
+                    {%- for person in doc.contributors %}
+                        <li><p>{% if person.url %}<a href="{{ person.url }}">{% endif %}{{ person.name|safe }}{% if person.url %}</a>{% endif %}</p></li>
+                    {%- endfor %}
+                    </ul>
+                    {%- endif %}
+                    <p class="text-right">Copyright &copy; 2022-2023 VYT and contributors. All rights reserved.</p>
+                    <p class="text-right">This documentation is licensed under the MIT License.</p>
+                </div>
+                <div class="backtotop no-print">
+                    <!--octicons arrow-up-24.svg--><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M18.655 10.405a.75.75 0 0 1-1.06 0l-4.97-4.97v14.44a.75.75 0 0 1-1.5 0V5.435l-4.97 4.97a.749.749 0 0 1-1.275-.326.749.749 0 0 1 .215-.734l6.25-6.25a.75.75 0 0 1 1.06 0l6.25 6.25a.75.75 0 0 1 0 1.06Z"/></svg>
+                </div>
+            </div>
+            <div class="footer container-fluid no-print">
+                {% block footer -%}
+                <div class="grid">
+                    <div class="col-xs-1 col-lg-3">
+                        <img width="128px" height="128px" src="{{ 'assets/logo.svg'|url }}" />
+                        <h1>VYT Docs</h1>
+                        <p><em>Simple documentations that everyone can contribute.</em></p>
+                    </div>
+                    <div class="col">
+                        <form class="search" method="GET" action="{{ 'search.html'|url }}">
+                            <input placeholder="Quick search..." type="search" name="q" />
+                            <input type="submit" value="" id="footer-search-submit-btn" />
+                            <label for="footer-search-submit-btn">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" class="search-icon">
+                                    <path fill-rule="nonzero" fill="currentColor" d="M15.5 14h-.79l-.28-.27a6.5 6.5 0 001.48-5.34c-.47-2.78-2.79-5-5.59-5.34a6.505 6.505 0 00-7.27 7.27c.34 2.8 2.56 5.12 5.34 5.59a6.5 6.5 0 005.34-1.48l.27.28v.79l4.25 4.25c.41.41 1.08.41 1.49 0 .41-.41.41-1.08 0-1.49L15.5 14zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"></path>
+                                </svg>
+                            </label>
+                        </form>
+                        <div class="grid grid-xs-1 grid-md-2 grid-lg-3">
+                            <div class="text-center">
+                                <h4>Links</h4>
+                                <ul class="list-none no-offset">
+                                    <li><a href="https://github.com/vytdev/vytdev.github.io/">GitHub</a></li>
+                                </ul>
+                            </div>
+                            <div class="text-center">
+                                <h4>Reference</h4>
+                                <ul class="list-none no-offset">
+                                    <li><a href="https://en.wikipedia.org/">Wikipedia</a></li>
+                                </ul>
+                            </div>
+                            <div class="text-center">
+                                <h4>Legal</h4>
+                                <ul class="list-none no-offset">
+                                    <!--
+                                    <li><a href="{{ 'privacy.html'|url }}">Privacy Policy</a></li>
+                                    <li><a href="{{ 'cookie.html'|url }}">Cookies Policy</a></li>
+                                    <li><a href="{{ 'terms.html'|url }}">Terms and Conditions</a></li>
+                                    <li><a href="{{ 'disclaimer.html'|url }}">Disclaimer</a></li>
+                                    -->
+                                    <li><a href="{{ 'license.html'|url }}">License</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <p>Copyright &copy; 2022-2023, VYT and contributors. All rights reserved.</p>
+                <p>This documentation is licensed under the <a href="{{ 'license.html'|url }}">MIT License</a>.</p>
+                {%- endblock %}
+            </div>
+        </div>
+    </div>
+
+    </body>
+</html>

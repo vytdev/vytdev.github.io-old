@@ -1,0 +1,233 @@
+/* ================================================================
+Stylesheet responsible on the site UI
+================================================================ */
+
+.print-only {
+    display: none;
+}
+
+.toc {
+    margin: 8px;
+}
+
+.toc ul {
+    padding: 0;
+}
+
+.toc li {
+    list-style-type: none;
+}
+
+.toc a {
+    padding: 3px;
+    padding-left: 8px;
+    border-left: 3px solid #aaa;
+    display: inline-block;
+    width: 100%;
+    color: inherit !important;
+    text-decoration: none !important;
+}
+
+.toc a.current {
+    border-left-color: #0083d1;
+    background-color: #71d4ff;
+    border-radius: 0 10px 10px 0;
+}
+
+.main {
+    max-height: 100vh;
+    overflow: hidden;
+    overflow-y: auto;
+    scroll-behavior: smooth;
+    scroll-padding-top: 40px;
+}
+
+.body > :nth-child(2) {
+    min-height: calc(100vh - 40px);
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.nav {
+    top: 0;
+    height: 40px;
+    background-color: #fff;
+    box-shadow: 0 1px 1px 0 rgba(0,0,0,.15);
+    width: 100%;
+    padding: 3px;
+    z-index: 9;
+    display: flex;
+    position: sticky;
+    vertical-align: center;
+}
+
+.nav > * {
+    margin-top: auto;
+    margin-bottom: auto;
+    margin-right: 6px;
+    margin-left: 6px;
+}
+
+.nav > a {
+    color: inherit;
+    font-size: 10px;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+form.search {
+    border: 1px solid #666;
+    border-radius: 3px;
+    display: flex;
+    flex: 1;
+}
+
+form.search > input[type=search] {
+    flex: 1;
+    border: 0;
+    border-right: inherit;
+}
+
+form.search > input[type=submit] {
+    display: none;
+}
+
+.body {
+    min-height: 100vh;
+    margin-bottom: 0;
+    position: relative;
+    background-color: #fff;
+    flex: 1;
+}
+
+.article {
+    padding-top: 10px;
+    padding-bottom: 40px;
+}
+
+.pagecard {
+    border-radius: 5px;
+    background-color: #eee;
+    border: 1px solid #aaa;
+    padding: 8px;
+}
+
+.sidebar {
+    overflow: hidden;
+    overflow-y: auto;
+    display: block;
+    background-color: #fff;
+    max-height: calc(100vh - 40px);
+    height: 100%;
+    left: -330px;
+    width: 100%;
+    max-width: 320px;
+    box-shadow: 1px 0 1px 0 rgba(0,0,0,.25);
+    transition: left 150ms ease;
+    position: fixed;
+    padding: 8px;
+    z-index: 8;
+    top: 40px;
+}
+
+.footer {
+    display: block;
+    position: relative;
+    padding: 8px;
+    background-color: #ddd;
+    bottom: 0;
+    color: #666;
+    z-index: 9;
+}
+
+.footer :not(h1,h2,h3,h4,h5,h6) {
+    font-size: 12px;
+}
+
+.footer a {
+    color: #666 !important;
+    text-decoration: none;
+}
+
+label[for=sidebar-toggle] {
+    width: 30px;
+    height: 30px;
+    cursor: pointer;
+    display: flex;
+    position: relative;
+    padding: 2px;
+}
+
+label[for=sidebar-toggle] > span {
+    margin-top: 12px;
+    position: relative;
+}
+
+label[for=sidebar-toggle] > span::before,
+label[for=sidebar-toggle] > span::after {
+    position: absolute;
+}
+
+label[for=sidebar-toggle] > span,
+label[for=sidebar-toggle] > span::before,
+label[for=sidebar-toggle] > span::after {
+    content: "";
+    display: block;
+    background-color: #888;
+    height: 3px;
+    width: 100%;
+    transition: all 150ms ease;
+}
+
+label[for=sidebar-toggle] > span::before {
+    top: -8px;
+}
+
+label[for=sidebar-toggle] > span::after {
+    bottom: -8px;
+}
+
+input#sidebar-toggle:checked ~ label[for=sidebar-toggle] > span::before {
+    transform: rotate(-45deg);
+    width: 75%;
+    top: -6.15px;
+    left: -4px;
+}
+
+input#sidebar-toggle:checked ~ label[for=sidebar-toggle] > span::after {
+    transform: rotate(45deg);
+    width: 75%;
+    bottom: -6.15px;
+    left: -4px;
+}
+
+@media (min-width: 768px) {
+    .nav {
+        padding-left: 3px;
+    }
+
+    .nav > form {
+        width: 40%;
+    }
+
+    label[for=sidebar-toggle] {
+        display: none;
+    }
+
+    .body {
+        position: relative;
+    }
+
+    .article {
+        width: 65%;
+        max-width: 65%;
+    }
+
+    .sidebar {
+        max-width: 35%;
+        padding-top: 8px;
+        box-shadow: none;
+        position: sticky;
+        left: 0;
+    }
+}

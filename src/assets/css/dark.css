@@ -1,0 +1,107 @@
+/* ================================================================
+Website dark mode theme
+================================================================ */
+
+html, body, .body, .article, .nav, .sidebar {
+    background-color: #222 !important;
+    color: #ddd;
+}
+
+div.admonition.tip {
+    background-color: #547500;
+    border-left-color: #c0ff25;
+}
+
+div.admonition.attention {
+    background-color: #a48a00;
+    border-left-color: #ffdb1d;
+}
+
+div.admonition.danger {
+    background-color: #b04b00;
+    border-left-color: #ff7813;
+
+}
+div.admonition.error {
+    background-color: #730000;
+    border-left-color: #ff4a4a;
+}
+
+div.admonition.hint {
+    background-color: #00801e;
+    border-left-color: #34ff63;
+}
+
+div.admonition.important {
+    background-color: #00866b;
+    border-left-color: #00fcca;
+}
+
+div.admonition.note {
+    background-color: #007791;
+    border-left-color: #00b6de;
+}
+
+div.admonition.warning {
+    background-color: #966b00;
+    border-left-color: #f3ae00;
+}
+
+div.admonition.caution {
+    background-color: #955100;
+    border-left-color: #f78700;
+}
+
+dt {
+    color: #fff;
+}
+
+.footer {
+    color: #aaa;
+    background-color: #444;
+}
+
+.footer a {
+    color: #aaa !important;
+}
+
+.pagecard {
+    background-color: #333;
+    border-color: #666;
+}
+
+.monochromatic {
+    filter: invert(1);
+}
+
+th, thead {
+    background-color: #444 !important;
+}
+
+:not(.snippet) code {
+    background-color: rgba(60,60,60,.45);
+}
+
+.snippet code {
+    background-color: inherit;
+}
+
+:not(.nohighlight) span.highlight:not(.nohighlight), mark {
+    color: #444;
+}
+
+form.search > input, form.search > label {
+    background-color: #383838;
+}
+
+/* hack for webkit autofill, thx:
+https://css-tricks.com/snippets/css/change-autocomplete-styles-webkit-browsers/
+*/
+input:autofill, input:-webkit-autofill,
+input:autofill:focus, input:-webkit-autofill:focus,
+input:autofill:hover, input:-webkit-autofill:hover {
+    color: #bbb;
+    -webkit-text-fill-color: #bbb;
+    background-color: #001b54;
+    transition: background-color 9999s ease-in-out 0s;
+}

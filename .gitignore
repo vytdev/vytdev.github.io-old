@@ -1,4 +1,4 @@
-# ignore builds
-/site
-/dist
-*.tgz
+# ignore built files
+
+build
+dist

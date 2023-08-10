@@ -5,7 +5,6 @@
 # 
 # ... to install needed dependencies.
 
-
 # We need this module as it is responsible on the main process for converting
 # markdown files to HTML.
 markdown>=3.4.1
@@ -24,6 +23,3 @@ watchdog==2.3.1
 
 # Module used when deploying to GitHub Pages
 ghp-import==2.1.0
-
-
-

@@ -1,0 +1,18 @@
+<!doctype html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+        
+        <!-- this is where the majic works! -->
+        <meta http-equiv="refresh" content="0; url={{ location }}" />
+        
+        <!-- some metadata -->
+        <title>Redirecting to {{ location|safe }}</title>
+        <link rel="canonical" href="{{ location }}" />
+    </head><body>
+        <!-- if the client doesnt support this type of redirect, we'll provide a link -->
+        <p>Redirecting to <a href="{{ location }}">{{ location|safe }}</a></p>
+    </body>
+</html>

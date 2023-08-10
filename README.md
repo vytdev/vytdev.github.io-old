@@ -1,18 +1,7 @@
 # VYT Docs
 
-My official documentation site served in GitHub Pages :zap:
-
-[*View deployment*](https://vytdev.github.io/)
-
-> **Note**: This project is still under development, means it aren't ready for
- production use.
+Official docs for my projects
 
 ## Contributing
 
-See the [contribution guidelines](https://vytdev.github.io/contributing)
-
-## License
-
-Copyright &copy; 2022-2023, Vincent Yanzee J. Tan and contributors. This project is
-licensed under the [MIT License](LICENSE). Go [here](https://vytdev.github.io/license)
-for more details.
+Your contributions are welcome!
