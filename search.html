@@ -8,33 +8,27 @@
         <meta name="theme-color" content="#ffffff" />
         
         <!-- metadata -->
-        <title>VYT Docs</title>
-        <meta name="description" content="Official VYT Docs" />
-        <meta name="revised" content="Sunday, August 06 2023" />
-        <meta name="author" content="" />
+        <title>Search on VYT Docs</title>
+        <meta name="description" content="Search on VYT documents" />
         
         <!-- open graph -->
-        <meta property="og:title" content="VYT Docs" />
-        <meta property="og:description" content="Official VYT Docs" />
-        <meta property="og:url" content=" https://vytdev.github.io/index" />
-        <meta property="og:site_name" content="VYT Docs" />
+        <meta property="og:title" content="Search" />
+        <meta property="og:description" content="Search on VYT documents" />
+        <meta property="og:url" content=" https://vytdev.github.io/search" />
+        <meta property="og:site_name" content="Search on VYT Docs" />
         <meta property="og:type" content="website" />
         <meta name="og:locale" content="en_US" />
         
         <!-- twitter -->
-        <meta property="twitter:title" content="VYT Docs" />
+        <meta property="twitter:title" content="Search" />
         <meta name="twitter:card" content="summary" />
         
         <!-- google and other seo -->
         <meta name="language" content="en" />
         <meta name="robots" content="index,follow" />
         <meta name="generator" content="Python3" />
-        <meta name="keywords" content="" />
-        <link rel="canonical" href="https://vytdev.github.io/index" />
-        <link rel="EditURI" href="https://github.com/vytdev/vytdev.github.io/edit/master/docs/index.md" />
-        <link rel="prev" href="None" />
-        <link rel="next" href="None" />
-        <script type="application/json+ld">{"@context":"https://schema.org","@type":"WebPage","description":"Official VYT Docs","headline":"VYT Docs","name":"VYT Docs","url":"https://vytdev.github.io/index"}</script>
+        <link rel="canonical" href="https://vytdev.github.io/search" />
+        <link rel="EditURI" href="https://github.com/vytdev/vytdev.github.io/edit/master/src/search.html" />
         
         <!-- preload -->
         <link rel="preload" as="font" href="assets/fonts/noto_sans/NotoSans-Regular.ttf" />
@@ -47,6 +41,7 @@
         <link rel="preload" as="style" type="text/css" href="assets/css/snippets_dark.css" />
         <link rel="preload" as="script" type="text/javascript" href="assets/js/jquery.js" />
         <link rel="preload" as="script" type="text/javascript" href="assets/js/util.js" />
+        <link rel="preload" as="script" type="text/javascript" href="assets/js/search.js" />
         <link rel="preload" as="image" type="image/x-icon" href="favicon.ico" />
         
         <!-- resources -->
@@ -60,9 +55,13 @@
         <link rel="stylesheet" type="text/css" href="assets/css/snippets_dark.css" media="(prefers-color-scheme: dark)" />
         <script type="text/javascript" src="assets/js/jquery.js"></script>
         <script type="text/javascript" src="assets/js/util.js"></script>
+        <script type="text/javascript" src="assets/js/search.js"></script>
+        
+        <!-- load the index -->
+        <script type="text/javascript" src="index.js" onload="doc.dispatchEvent('indexLoaded', [window.searchIndex]);" defer></script>
         
         <!-- page information -->
-        <script type="text/javascript">doc.page = {"title":"VYT Docs","about":"Official VYT Docs","prev":null,"next":null,"contributors":[],"keywords":[],"contents":[{"level":1,"id":"vyt-docs","name":"VYT Docs"}],"home":true,"location":"index","created":"Sunday, August 06 2023","updated":"Sunday, August 06 2023","canonical":"https://vytdev.github.io/index"}</script>
+        <script type="text/javascript">doc.page = {"title":"Search on VYT Docs","about":"Search on VYT documents","prev":null,"next":null,"contributors":[],"keywords":[],"contents":[],"home":false,"location":"search","created":"Sunday, August 06 2023","updated":"Sunday, August 06 2023","canonical":"https://vytdev.github.io/search"}</script>
     </head><body>
 
     <div class="main">
@@ -71,26 +70,21 @@
                 <div class="nav no-print" role="navigation">
                     
                     <a href="https://vytdev.github.io/"><img width="24px" height="24px" src="assets/logo.svg" /></a>
-                    <form class="search" method="GET" action="search.html">
-                        <input placeholder="Search..." type="search" name="q" />
-                        <input type="submit" value="" id="nav-search-submit-btn" />
-                        <label for="nav-search-submit-btn">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" class="search-icon">
-                                <path fill-rule="nonzero" fill="currentColor" d="M15.5 14h-.79l-.28-.27a6.5 6.5 0 001.48-5.34c-.47-2.78-2.79-5-5.59-5.34a6.505 6.505 0 00-7.27 7.27c.34 2.8 2.56 5.12 5.34 5.59a6.5 6.5 0 005.34-1.48l.27.28v.79l4.25 4.25c.41.41 1.08.41 1.49 0 .41-.41.41-1.08 0-1.49L15.5 14zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"></path>
-                            </svg>
-                        </label>
-                    </form>
                     <a class="hide-xs show-md" href="wiki/index.html">Wiki</a>
                     <a class="hide-xs show-md" href="projects/index.html">Projects</a>
                     <a class="hide-xs show-md" href="help/index.html">Help</a>
                 </div>
                 <div class="container-fluid grid">
-                    
-                    <div class="article col-xs-1">
-                        
-<h1 id="vyt-docs">VYT Docs<a class="headerlink" href="#vyt-docs" title="Permanent link to this reference.">&para;</a></h1>
-<p>Hello</p>
-                        
+                    <div class="article col-1">
+                        <form class="search" method="GET" action="search.html">
+                            <input placeholder="Search..." type="search" name="q" />
+                            <input type="submit" value="" id="nav-search-submit-btn" />
+                            <label for="nav-search-submit-btn">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" class="search-icon">
+                                    <path fill-rule="nonzero" fill="currentColor" d="M15.5 14h-.79l-.28-.27a6.5 6.5 0 001.48-5.34c-.47-2.78-2.79-5-5.59-5.34a6.505 6.505 0 00-7.27 7.27c.34 2.8 2.56 5.12 5.34 5.59a6.5 6.5 0 005.34-1.48l.27.28v.79l4.25 4.25c.41.41 1.08.41 1.49 0 .41-.41.41-1.08 0-1.49L15.5 14zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"></path>
+                                </svg>
+                            </label>
+                        </form>
                     </div>
                 </div>
                 <div class="owner-print print-only">
