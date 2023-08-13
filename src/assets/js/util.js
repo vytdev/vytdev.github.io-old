@@ -98,8 +98,7 @@ Handle website behaviour
             sepidx = part.indexOf("=");
             key = decodeURIComponent((sepidx == -1 ? part: part.substr(0, sepidx)).replace(rurlquerydecode, " "));
             val = decodeURIComponent((sepidx == -1 ? part: part.substr(sepidx + 1, part.length)).replace(rurlquerydecode, " "));
-            if (hasProp(output, key)) output[key].push(val);
-            else output[key] = [val];
+            output[key] = val;
         };
         return output;
     })();
@@ -160,10 +159,8 @@ Handle website behaviour
             r.removeChild(node);
             if (p) r.removeChild(p);
         } else if (node.nodeType != document.TEXT_NODE) {
-            var i,
-            n,
-            m,
-            l = node.childNodes.length;
+            var i, n, m,
+                l = node.childNodes.length;
             for (i = 0; i < l; i++) {
                 n = node.childNodes[i];
                 if (n.nodeType == document.ELEMENT_NODE) doc.unhighlight(n);
@@ -188,7 +185,7 @@ Handle website behaviour
             if (typeof fn != "function") throw "EventEmitter.prototype.addEventListener() argument 1 'fn' must be a function!";
             if (!opt) opt = {};
             var id = this.id += 1,
-            obj = {};
+                obj = {};
             obj.fn = fn;
             obj.ev = ev.toLowerCase();
             obj.once = !!opt.once;
@@ -203,11 +200,10 @@ Handle website behaviour
             if (!ev.length) throw "Event name cannot be empty!";
             if (!args) args = [];
             ev = ev.toLowerCase();
-            var i,
-            l,
-            s = {},
-            stl = "on" + ev,
-            f = typeof action == "function";
+            var i, l,
+                s = {},
+                stl = "on" + ev,
+                f = typeof action == "function";
             s.type = ev;
             if (f) s.cancel = false;
             if (typeof this[stl] == "function") this[stl].call(s, args);
@@ -256,8 +252,7 @@ Handle website behaviour
 
         // highlight page contents
         if (doc.query.highlight) {
-            for (var i = 0; i < doc.query.highlight.length; i++)
-                doc.highlight(doc.query.highlight[i], contentEl[0]);
+            doc.highlight(doc.query.highlight, contentEl[0])
         }
 
         // sidebar behaviour for devices <768px width

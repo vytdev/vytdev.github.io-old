@@ -1196,7 +1196,7 @@ class Builder:
         print("Deploying to GitHub Pages...")
         
         try:
-            ghp_import(dest, mesg=msg, push=True, branch="site")
+            ghp_import(self.outdir, mesg=msg, push=True, branch="site")
         except:
             print("Deployment failed.")
     
@@ -1332,8 +1332,11 @@ class Builder:
                         shutil.copyfile(root / file, os.path.join(self.outdir, file))
                     continue
                 self.build_page(root / file, True)
+        
         # create redirects
         self.create_redirects()
+        # create sitemap
+        self.print_sitemap()
     
     def delete_path(self, path):
         if os.path.exists(path):
