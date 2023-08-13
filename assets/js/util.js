@@ -252,8 +252,7 @@ Handle website behaviour
 
         // highlight page contents
         if (doc.query.highlight) {
-            for (var i = 0; i < doc.query.highlight.length; i++)
-                doc.highlight(doc.query.highlight[i], contentEl[0]);
+            doc.highlight(doc.query.highlight, contentEl[0])
         }
 
         // sidebar behaviour for devices <768px width
