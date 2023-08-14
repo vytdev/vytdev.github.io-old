@@ -1,7 +1,3 @@
 # VYT Docs
 
-Official docs for my projects
-
-## Contributing
-
-Your contributions are welcome!
+Docs for my projects served in GitHub Pages :zap:
